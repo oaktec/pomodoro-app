@@ -27,7 +27,11 @@ function App() {
   return (
     <div className="container">
       <header className="flex justify-center">
-        <img className="mt-8 h-6" src={Logo} alt="logo" />
+        <img
+          className="mt-8 h-6 sm:mt-20 sm:h-8 lg:mt-8"
+          src={Logo}
+          alt="logo"
+        />
       </header>
       <main className="mt-11 flex flex-col">
         <TimerModeSelect
