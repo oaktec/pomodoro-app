@@ -5,7 +5,7 @@ import TimerModeSelect from "./components/TimerModeSelect";
 import Logo from "./assets/Logo.svg";
 
 function App() {
-  const [mode, setMode] = useState<"pomodoro" | "short-break" | "long-break">(
+  const [mode, setMode] = useState<"pomodoro" | "short break" | "long break">(
     "pomodoro"
   );
 
@@ -18,7 +18,7 @@ function App() {
         <TimerModeSelect
           className="mb-6"
           selected={mode}
-          onSelect={(mode: "pomodoro" | "short-break" | "long-break") =>
+          onSelect={(mode: "pomodoro" | "short break" | "long break") =>
             setMode(mode)
           }
         />

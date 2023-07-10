@@ -1,14 +1,11 @@
-// Typescript React component which is a selector for a timer mode. Three options
-// are available: Pomodoro, Short Break, and Long Break. The selected option has a
-// red background while the others don't.
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
 export interface TimerModeSelectProps {
   className?: string;
-  selected: "pomodoro" | "short-break" | "long-break";
-  onSelect: (mode: "pomodoro" | "short-break" | "long-break") => void;
+  selected: "pomodoro" | "short break" | "long break";
+  onSelect: (mode: "pomodoro" | "short break" | "long break") => void;
 }
 
 const TimerModeSelect: React.FC<TimerModeSelectProps> = ({
@@ -16,41 +13,30 @@ const TimerModeSelect: React.FC<TimerModeSelectProps> = ({
   selected,
   onSelect,
 }) => {
+  const options = ["pomodoro", "short break", "long break"];
+
   return (
-    <section className={cn("flex justify-between", className)}>
-      <button
-        className={cn(
-          "flex-grow-1 rounded-lg px-4 py-3 text-center text-sm font-bold",
-          selected === "pomodoro"
-            ? "bg-red-500 text-white"
-            : "bg-gray-100 text-gray-500"
-        )}
-        onClick={() => onSelect("pomodoro")}
-      >
-        Pomodoro
-      </button>
-      <button
-        className={cn(
-          "flex-grow-1 rounded-lg px-4 py-3 text-center text-sm font-bold",
-          selected === "short-break"
-            ? "bg-red-500 text-white"
-            : "bg-gray-100 text-gray-500"
-        )}
-        onClick={() => onSelect("short-break")}
-      >
-        Short Break
-      </button>
-      <button
-        className={cn(
-          "flex-grow-1 rounded-lg px-4 py-3 text-center text-sm font-bold",
-          selected === "long-break"
-            ? "bg-red-500 text-white"
-            : "bg-gray-100 text-gray-500"
-        )}
-        onClick={() => onSelect("long-break")}
-      >
-        Long Break
-      </button>
+    <section
+      className={cn(
+        "flex h-16 justify-between rounded-[2rem] bg-midnight pl-2 pr-2",
+        className
+      )}
+    >
+      {options.map((option) => (
+        <button
+          className={cn(
+            "mb-2 mt-2 w-1/3 rounded-3xl text-center text-xs font-bold transition-colors",
+            selected === option
+              ? "bg-red text-background"
+              : "bg-midnight text-primary opacity-40"
+          )}
+          onClick={() =>
+            onSelect(option as "pomodoro" | "short break" | "long break")
+          }
+        >
+          {option}
+        </button>
+      ))}
     </section>
   );
 };
