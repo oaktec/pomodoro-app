@@ -17,6 +17,15 @@ const MainTimer: React.FC<MainTimerProps> = ({
   isRunning,
   onPlayPause,
 }) => {
+  const formatTime = (time: number) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
+
+    return `${minutes < 10 ? "0" + minutes.toString() : minutes}:${
+      seconds < 10 ? "0" + seconds.toString() : seconds
+    }`;
+  };
+
   return (
     <button
       className={cn(
@@ -27,7 +36,7 @@ const MainTimer: React.FC<MainTimerProps> = ({
     >
       <div className="relative m-4 flex flex-1 items-center justify-center self-stretch rounded-full bg-midnight">
         <div className="pr-1 text-[5rem] font-bold tracking-[-4px] text-primary sm:pr-[5px] sm:text-[100px] sm:tracking-[-5px]">
-          {timeRemaining}
+          {formatTime(timeRemaining)}
         </div>
 
         <div className="absolute bottom-[20%] z-10 pl-[13.125px] text-sm font-bold tracking-[13.125px] text-primary sm:pl-[15px] sm:text-base sm:tracking-[15px]">
