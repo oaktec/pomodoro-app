@@ -20,21 +20,23 @@ const MainTimer: React.FC<MainTimerProps> = ({
   return (
     <section
       className={cn(
-        "flex h-96 w-96 flex-col items-center justify-center rounded-full bg-midnight",
+        "main-timer-gradient flex h-[300px] w-[300px] items-center justify-center rounded-full",
         className
       )}
     >
-      <div className="text-4xl font-bold">{mode}</div>
-      <div className="text-4xl font-bold">{timeRemaining}</div>
-      <button
-        className={cn(
-          "h-20 w-20 rounded-full bg-primary text-background",
-          isRunning ? "opacity-40" : ""
-        )}
-        onClick={onPlayPause}
-      >
-        {isRunning ? "PAUSE" : "PLAY"}
-      </button>
+      <div>
+        <div className="text-4xl font-bold">{mode}</div>
+        <div className="text-4xl font-bold">{timeRemaining}</div>
+        <button
+          className={cn(
+            "h-20 w-20 rounded-full bg-primary text-background",
+            isRunning ? "opacity-40" : ""
+          )}
+          onClick={onPlayPause}
+        >
+          {isRunning ? "PAUSE" : "PLAY"}
+        </button>
+      </div>
     </section>
   );
 };
