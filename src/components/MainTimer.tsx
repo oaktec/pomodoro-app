@@ -42,16 +42,6 @@ const MainTimer: React.FC<MainTimerProps> = ({
         <div className="absolute bottom-[20%] z-10 pl-[13.125px] text-sm font-bold tracking-[13.125px] text-primary sm:pl-[15px] sm:text-base sm:tracking-[15px]">
           {isRunning ? "PAUSE" : "PLAY"}
         </div>
-
-        {/* <button
-          className={cn(
-            "absolute bottom-[25%] z-10 rounded-full bg-primary text-background",
-            isRunning ? "opacity-40" : ""
-          )}
-          onClick={onPlayPause}
-        >
-          {isRunning ? "PAUSE" : "PLAY"}
-        </button> */}
       </div>
     </button>
   );
