@@ -18,26 +18,33 @@ const MainTimer: React.FC<MainTimerProps> = ({
   onPlayPause,
 }) => {
   return (
-    <section
+    <button
       className={cn(
-        "main-timer-gradient flex h-[300px] w-[300px] items-center justify-center rounded-full",
+        "main-timer-gradient main-timer-box-shadow flex h-[300px] w-[300px] items-center justify-center rounded-full shadow sm:h-[410px] sm:w-[410px]",
         className
       )}
+      onClick={onPlayPause}
     >
-      <div>
-        <div className="text-4xl font-bold">{mode}</div>
-        <div className="text-4xl font-bold">{timeRemaining}</div>
-        <button
+      <div className="relative m-4 flex flex-1 items-center justify-center self-stretch rounded-full bg-midnight">
+        <div className="pr-1 text-[5rem] font-bold tracking-[-4px] text-primary sm:pr-[5px] sm:text-[100px] sm:tracking-[-5px]">
+          {timeRemaining}
+        </div>
+
+        <div className="absolute bottom-[20%] z-10 pl-[13.125px] text-sm font-bold tracking-[13.125px] text-primary sm:pl-[15px] sm:text-base sm:tracking-[15px]">
+          {isRunning ? "PAUSE" : "PLAY"}
+        </div>
+
+        {/* <button
           className={cn(
-            "h-20 w-20 rounded-full bg-primary text-background",
+            "absolute bottom-[25%] z-10 rounded-full bg-primary text-background",
             isRunning ? "opacity-40" : ""
           )}
           onClick={onPlayPause}
         >
           {isRunning ? "PAUSE" : "PLAY"}
-        </button>
+        </button> */}
       </div>
-    </section>
+    </button>
   );
 };
 

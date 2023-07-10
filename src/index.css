@@ -17,6 +17,10 @@ input[type="number"] {
   background: linear-gradient(315deg, #2e325a 0%, #0e112a 100%);
 }
 
+.main-timer-box-shadow {
+  box-shadow: 50px 50px 100px 0px #121530, -50px -50px 100px 0px #272c5a;
+}
+
 @layer base {
   :root {
     --background: 235 35% 18%;

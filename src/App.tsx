@@ -25,7 +25,7 @@ function App() {
   }, [isRunning]);
 
   return (
-    <div className="container">
+    <div className="container flex h-screen flex-col">
       <header className="flex justify-center">
         <img
           className="mt-8 h-6 sm:mt-20 sm:h-8 lg:mt-8"
@@ -33,24 +33,26 @@ function App() {
           alt="logo"
         />
       </header>
-      <main className="mt-11 flex flex-col items-center sm:mt-14">
+      <main className="mt-11 flex flex-1 flex-col items-center sm:mt-14">
         <TimerModeSelect
-          className="mb-6"
+          className="mb-12"
           selected={mode}
           onSelect={(mode: "pomodoro" | "short break" | "long break") =>
             setMode(mode)
           }
         />
-        <MainTimer
-          className="mb-6"
-          mode={mode}
-          timeRemaining={timeRemaining}
-          isRunning={isRunning}
-          onPlayPause={() => {
-            setIsRunning(!isRunning);
-          }}
-        />
-        <div>settings cog</div>
+        <div className="flex flex-1 flex-col items-center justify-around">
+          <MainTimer
+            className="mb-6"
+            mode={mode}
+            timeRemaining={timeRemaining}
+            isRunning={isRunning}
+            onPlayPause={() => {
+              setIsRunning(!isRunning);
+            }}
+          />
+          <div className="">settings cog</div>
+        </div>
       </main>
     </div>
   );
