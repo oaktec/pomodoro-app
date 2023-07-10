@@ -24,6 +24,7 @@ const TimerModeSelect: React.FC<TimerModeSelectProps> = ({
     >
       {options.map((option) => (
         <button
+          key={option}
           className={cn(
             "mb-2 mt-2 w-1/3 rounded-3xl text-center text-xs font-bold transition-colors",
             selected === option
