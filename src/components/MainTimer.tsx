@@ -39,7 +39,7 @@ const MainTimer: React.FC<MainTimerProps> = ({
   return (
     <button
       className={cn(
-        "main-timer-gradient main-timer-box-shadow flex h-[300px] w-[300px] items-center justify-center rounded-full shadow sm:h-[410px] sm:w-[410px]",
+        "main-timer-gradient main-timer-box-shadow flex h-[300px] w-[300px] items-center justify-center rounded-full shadow hover:scale-[1.01] sm:h-[410px] sm:w-[410px]",
         className
       )}
       onClick={onPlayPause}
