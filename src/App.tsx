@@ -11,6 +11,23 @@ function App() {
   );
   const [timeRemaining, setTimeRemaining] = useState(1500);
   const [isRunning, setIsRunning] = useState(false);
+  const [modes, setModes] = useState({
+    pomodoro: {
+      label: "pomodoro",
+      duration: 1500,
+      colorName: "red",
+    },
+    "short break": {
+      label: "short break",
+      duration: 300,
+      colorName: "teal",
+    },
+    "long break": {
+      label: "long break",
+      duration: 900,
+      colorName: "purple",
+    },
+  });
 
   useEffect(() => {
     if (isRunning) {
@@ -37,6 +54,7 @@ function App() {
         <TimerModeSelect
           className="mb-12"
           selected={mode}
+          modes={modes}
           onSelect={(mode: "pomodoro" | "short break" | "long break") =>
             setMode(mode)
           }
@@ -45,6 +63,7 @@ function App() {
           <MainTimer
             className="mb-6"
             mode={mode}
+            modes={modes}
             timeRemaining={timeRemaining}
             isRunning={isRunning}
             onPlayPause={() => {

@@ -1,10 +1,17 @@
 import * as React from "react";
 
-import { cn, getModeColor } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 export interface TimerModeSelectProps {
   className?: string;
   selected: "pomodoro" | "short break" | "long break";
+  modes: {
+    [key: string]: {
+      label: string;
+      duration: number;
+      colorName: string;
+    };
+  };
   onSelect: (mode: "pomodoro" | "short break" | "long break") => void;
 }
 
@@ -12,6 +19,7 @@ const TimerModeSelect: React.FC<TimerModeSelectProps> = ({
   className,
   selected,
   onSelect,
+  modes,
 }) => {
   const options = ["pomodoro", "short break", "long break"];
 
@@ -28,7 +36,7 @@ const TimerModeSelect: React.FC<TimerModeSelectProps> = ({
           className={cn(
             "mb-2 mt-2 w-[6.5rem] rounded-3xl text-center text-xs font-bold transition-colors sm:w-[7.5rem] sm:text-sm",
             selected === option
-              ? `bg-${getModeColor(option)} text-background"`
+              ? `bg-${modes[option].colorName} text-background"`
               : "bg-midnight text-primary opacity-40"
           )}
           onClick={() =>
