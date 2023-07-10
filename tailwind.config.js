@@ -2,12 +2,15 @@
 module.exports = {
   darkMode: ["class"],
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
-	],
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+  ],
   theme: {
+    colors: {
+      midnight: "#1E213F",
+    },
     container: {
       center: true,
       padding: "2rem",
@@ -16,16 +19,33 @@ module.exports = {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ['"Kumbh Sans"', "sans-serif"],
+        mono: ['"Space Mono"', "monospace"],
+        "roboto-slab": ['"Roboto Slab"', "serif"],
+      },
+      fontSize: {
+        "3xl": "2rem",
+      },
       colors: {
+        background: "hsl(var(--background))",
+        primary: "hsl(var(--primary))",
+        "background-contrast": "hsl(var(--background-contrast))",
+        "background-foreground": "hsl(var(--background-foreground))",
+
+        red: "hsl(var(--red))",
+        "pale-red": "hsl(var(--pale-red))",
+        white: "hsl(var(--white))",
+        "off-white": "hsl(var(--off-white))",
+        teal: "hsl(var(--teal))",
+        purple: "hsl(var(--purple))",
+        midnight: "hsl(var(--midnight))",
+
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
-        },
+
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
@@ -73,4 +93,4 @@ module.exports = {
     },
   },
   plugins: [require("tailwindcss-animate")],
-}
+};
