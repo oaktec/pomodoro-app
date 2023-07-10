@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { cn } from "@/lib/utils";
+import { cn, getModeColor } from "@/lib/utils";
 
 export interface TimerModeSelectProps {
   className?: string;
@@ -28,7 +28,7 @@ const TimerModeSelect: React.FC<TimerModeSelectProps> = ({
           className={cn(
             "mb-2 mt-2 w-[6.5rem] rounded-3xl text-center text-xs font-bold transition-colors sm:w-[7.5rem] sm:text-sm",
             selected === option
-              ? "bg-red text-background"
+              ? `bg-${getModeColor(option)} text-background"`
               : "bg-midnight text-primary opacity-40"
           )}
           onClick={() =>
