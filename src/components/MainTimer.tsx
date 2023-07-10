@@ -1,6 +1,8 @@
 import * as React from "react";
+import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
 
-import { cn } from "@/lib/utils";
+import { cn, getModeColor } from "@/lib/utils";
 
 export interface MainTimerProps {
   className?: string;
@@ -35,7 +37,18 @@ const MainTimer: React.FC<MainTimerProps> = ({
       onClick={onPlayPause}
     >
       <div className="relative m-4 flex flex-1 items-center justify-center self-stretch rounded-full bg-midnight">
-        <div className="pr-1 text-[5rem] font-bold tracking-[-4px] text-primary sm:pr-[5px] sm:text-[100px] sm:tracking-[-5px]">
+        <CircularProgressbar
+          className="absolute z-0 h-[92%] w-[92%]"
+          value={timeRemaining}
+          strokeWidth={3}
+          maxValue={100}
+          styles={buildStyles({
+            trailColor: "var(--midnight)",
+            pathColor: `hsl(var(--${getModeColor(mode)}))`,
+          })}
+        />
+
+        <div className="z-10 pr-1 text-[5rem] font-bold tracking-[-4px] text-primary sm:pr-[5px] sm:text-[100px] sm:tracking-[-5px]">
           {formatTime(timeRemaining)}
         </div>
 
