@@ -13,11 +13,6 @@ input[type="number"] {
   -moz-appearance: textfield;
 }
 
-.svg-red {
-  filter: invert(20%) sepia(100%) saturate(7300%) hue-rotate(360deg)
-    brightness(100%) contrast(101%);
-}
-
 @layer base {
   :root {
     --background: 235 35% 18%;
