@@ -18,7 +18,7 @@ const TimerModeSelect: React.FC<TimerModeSelectProps> = ({
   return (
     <section
       className={cn(
-        "flex h-16 justify-between rounded-[2rem] bg-midnight pl-2 pr-2",
+        "flex h-16 w-80 justify-between rounded-[2rem] bg-midnight pl-2 pr-2 sm:w-96",
         className
       )}
     >
@@ -26,7 +26,7 @@ const TimerModeSelect: React.FC<TimerModeSelectProps> = ({
         <button
           key={option}
           className={cn(
-            "mb-2 mt-2 w-1/3 rounded-3xl text-center text-xs font-bold transition-colors",
+            "mb-2 mt-2 w-[6.5rem] rounded-3xl text-center text-xs font-bold transition-colors sm:w-[7.5rem] sm:text-sm",
             selected === option
               ? "bg-red text-background"
               : "bg-midnight text-primary opacity-40"

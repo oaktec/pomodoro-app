@@ -33,7 +33,7 @@ function App() {
           alt="logo"
         />
       </header>
-      <main className="mt-11 flex flex-col">
+      <main className="mt-11 flex flex-col items-center sm:mt-14">
         <TimerModeSelect
           className="mb-6"
           selected={mode}
