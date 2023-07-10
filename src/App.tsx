@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import TimerModeSelect from "./components/TimerModeSelect";
 
 import Logo from "./assets/Logo.svg";
+import SettingsLogo from "./assets/icon-settings.svg";
 import MainTimer from "./components/MainTimer";
 
 function App() {
@@ -70,7 +71,9 @@ function App() {
               setIsRunning(!isRunning);
             }}
           />
-          <div className="">settings cog</div>
+          <button>
+            <img src={SettingsLogo} alt="settings" />
+          </button>
         </div>
       </main>
     </div>
