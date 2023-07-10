@@ -1,13 +1,28 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import TimerModeSelect from "./components/TimerModeSelect";
 
 import Logo from "./assets/Logo.svg";
+import MainTimer from "./components/MainTimer";
 
 function App() {
   const [mode, setMode] = useState<"pomodoro" | "short break" | "long break">(
     "pomodoro"
   );
+  const [timeRemaining, setTimeRemaining] = useState(1500);
+  const [isRunning, setIsRunning] = useState(false);
+
+  useEffect(() => {
+    if (isRunning) {
+      const timer = setInterval(() => {
+        setTimeRemaining((timeRemaining) => timeRemaining - 1);
+      }, 1000);
+
+      return () => {
+        clearInterval(timer);
+      };
+    }
+  }, [isRunning]);
 
   return (
     <div className="container">
@@ -22,7 +37,15 @@ function App() {
             setMode(mode)
           }
         />
-        <div>main timer with countdown</div>
+        <MainTimer
+          className="mb-6"
+          mode={mode}
+          timeRemaining={timeRemaining}
+          isRunning={isRunning}
+          onPlayPause={() => {
+            setIsRunning(!isRunning);
+          }}
+        />
         <div>settings cog</div>
       </main>
     </div>
