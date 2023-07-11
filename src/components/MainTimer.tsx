@@ -49,7 +49,7 @@ const MainTimer: React.FC<MainTimerProps> = ({
           className="absolute z-0 h-[92%] w-[92%]"
           value={timeRemaining}
           strokeWidth={3}
-          maxValue={100}
+          maxValue={modes[mode].duration}
           styles={buildStyles({
             trailColor: "var(--midnight)",
             pathColor: `hsl(var(--${modes[mode].colorName}))`,
