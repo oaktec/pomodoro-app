@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 
 export interface TimerModeSelectProps {
   className?: string;
-  selected: "pomodoro" | "short break" | "long break";
+  selected: "focus" | "short break" | "long break";
   modes: {
     [key: string]: {
       label: string;
@@ -12,7 +12,7 @@ export interface TimerModeSelectProps {
       colorName: string;
     };
   };
-  onSelect: (mode: "pomodoro" | "short break" | "long break") => void;
+  onSelect: (mode: "focus" | "short break" | "long break") => void;
 }
 
 const TimerModeSelect: React.FC<TimerModeSelectProps> = ({
@@ -21,7 +21,7 @@ const TimerModeSelect: React.FC<TimerModeSelectProps> = ({
   onSelect,
   modes,
 }) => {
-  const options = ["pomodoro", "short break", "long break"];
+  const options = ["focus", "short break", "long break"];
 
   return (
     <section
@@ -40,7 +40,7 @@ const TimerModeSelect: React.FC<TimerModeSelectProps> = ({
               : "bg-midnight text-primary opacity-40"
           )}
           onClick={() =>
-            onSelect(option as "pomodoro" | "short break" | "long break")
+            onSelect(option as "focus" | "short break" | "long break")
           }
         >
           {option}

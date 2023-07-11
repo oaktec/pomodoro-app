@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 
 export interface MainTimerProps {
   className?: string;
-  mode: "pomodoro" | "short break" | "long break";
+  mode: "focus" | "short break" | "long break";
   modes: {
     [key: string]: {
       label: string;

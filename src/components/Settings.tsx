@@ -26,7 +26,7 @@ import { Input } from "./ui/input";
 import { TypographyH3 } from "./ui/typography";
 
 const formSchema = z.object({
-  pomodoro: z.coerce.number().min(1).max(99),
+  focus: z.coerce.number().min(1).max(99),
   "short break": z.coerce.number().min(1).max(99),
   "long break": z.coerce.number().min(1).max(99),
 });
@@ -34,7 +34,7 @@ const formSchema = z.object({
 export interface SettingsProps {
   setModes: (
     value: React.SetStateAction<{
-      pomodoro: {
+      focus: {
         label: string;
         duration: number;
         colorName: string;
@@ -59,7 +59,7 @@ const Settings: React.FC<SettingsProps> = ({ setModes }) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      pomodoro: 25,
+      focus: 25,
       "short break": 5,
       "long break": 15,
     },
@@ -68,9 +68,9 @@ const Settings: React.FC<SettingsProps> = ({ setModes }) => {
   const onSubmit = (data: z.infer<typeof formSchema>): void => {
     setModes((prevModes) => ({
       ...prevModes,
-      pomodoro: {
-        ...prevModes.pomodoro,
-        duration: data.pomodoro * 60,
+      focus: {
+        ...prevModes.focus,
+        duration: data.focus * 60,
       },
       "short break": {
         ...prevModes["short break"],
@@ -105,10 +105,10 @@ const Settings: React.FC<SettingsProps> = ({ setModes }) => {
             <div className="ml-6 mr-6 flex flex-col justify-center gap-2 border-light-gray sm:ml-10 sm:mr-10 sm:flex-row sm:justify-between sm:gap-5 sm:border-b">
               <FormField
                 control={form.control}
-                name="pomodoro"
+                name="focus"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>pomodoro</FormLabel>
+                    <FormLabel>focus</FormLabel>
                     <FormControl>
                       <Input type="number" {...field} />
                     </FormControl>

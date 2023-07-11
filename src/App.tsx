@@ -8,14 +8,14 @@ import Settings from "./components/Settings";
 import alarmSound from "./assets/alarm.wav";
 
 function App() {
-  const [mode, setMode] = useState<"pomodoro" | "short break" | "long break">(
-    "pomodoro"
+  const [mode, setMode] = useState<"focus" | "short break" | "long break">(
+    "focus"
   );
   const [timeRemaining, setTimeRemaining] = useState(1500);
   const [isRunning, setIsRunning] = useState(false);
   const [modes, setModes] = useState({
-    pomodoro: {
-      label: "pomodoro",
+    focus: {
+      label: "focus",
       duration: 1500,
       colorName: "red",
     },
@@ -74,7 +74,7 @@ function App() {
           className="mb-12"
           selected={mode}
           modes={modes}
-          onSelect={(mode: "pomodoro" | "short break" | "long break") =>
+          onSelect={(mode: "focus" | "short break" | "long break") =>
             setMode(mode)
           }
         />
