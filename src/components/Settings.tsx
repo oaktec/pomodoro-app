@@ -145,7 +145,7 @@ const Settings: React.FC<SettingsProps> = ({ setModes }) => {
             </div>
             {/* <TypographyH3 className="mb-[10px]">FONT</TypographyH3> */}
             <DialogFooter>
-              <Button type="submit">Submit</Button>
+              <Button type="submit">Apply</Button>
             </DialogFooter>
           </form>
         </Form>
