@@ -31,6 +31,14 @@ function App() {
   });
 
   useEffect(() => {
+    setTimeRemaining(modes[mode].duration);
+  }, [mode, modes]);
+
+  useEffect(() => {
+    setIsRunning(false);
+  }, [mode]);
+
+  useEffect(() => {
     if (isRunning) {
       const timer = setInterval(() => {
         setTimeRemaining((timeRemaining) => timeRemaining - 1);
@@ -71,7 +79,7 @@ function App() {
               setIsRunning(!isRunning);
             }}
           />
-          <Settings />
+          <Settings setModes={setModes} />
         </div>
       </main>
     </div>

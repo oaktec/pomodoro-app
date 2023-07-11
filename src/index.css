@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
@@ -11,7 +11,7 @@ input[type="number"]::-webkit-outer-spin-button {
 input[type="number"] {
   appearance: none;
   -moz-appearance: textfield;
-} */
+}
 
 .main-timer-gradient {
   background: linear-gradient(315deg, #2e325a 0%, #0e112a 100%);

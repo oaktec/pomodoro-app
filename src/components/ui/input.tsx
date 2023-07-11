@@ -2,21 +2,57 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
+import iconArrowDown from "@/assets/icon-arrow-down.svg";
+import iconArrowUp from "@/assets/icon-arrow-up.svg";
+import iconArrowDownHover from "@/assets/icon-arrow-down-hover.svg";
+import iconArrowUpHover from "@/assets/icon-arrow-up-hover.svg";
+
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {}
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, ...props }, ref) => {
+    const [upHovered, setUpHovered] = React.useState(false);
+    const [downHovered, setDownHovered] = React.useState(false);
+
     return (
-      <input
-        type={type}
-        className={cn(
-          "file:bg-transparent flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
-          className
+      <div className="relative">
+        <input
+          type={type}
+          className={cn(
+            "h-10 w-[8.75rem] rounded-[0.625rem] bg-off-white p-4 text-sm font-bold text-midnight focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 sm:h-12",
+            className
+          )}
+          ref={ref}
+          {...props}
+        />
+        {type === "number" && (
+          <div className="absolute right-1 top-0 flex h-full flex-col">
+            <button
+              className="flex h-full w-full flex-1 items-end pl-2 pr-2"
+              onMouseEnter={() => setUpHovered(true)}
+              onMouseLeave={() => setUpHovered(false)}
+            >
+              <img
+                className="mb-1 pt-1.5"
+                src={upHovered ? iconArrowUpHover : iconArrowUp}
+                alt="arrow up"
+              />
+            </button>
+            <button
+              className="flex h-full w-full flex-1 items-start pl-2 pr-2"
+              onMouseEnter={() => setDownHovered(true)}
+              onMouseLeave={() => setDownHovered(false)}
+            >
+              <img
+                className="visible mt-1 pb-1.5"
+                src={downHovered ? iconArrowDownHover : iconArrowDown}
+                alt="arrow down"
+              />
+            </button>
+          </div>
         )}
-        ref={ref}
-        {...props}
-      />
+      </div>
     );
   }
 );
