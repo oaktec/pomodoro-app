@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import SettingsLogo from "@/assets/icon-settings.svg";
 import {
   Dialog,
@@ -52,6 +54,8 @@ export interface SettingsProps {
 }
 
 const Settings: React.FC<SettingsProps> = ({ setModes }) => {
+  const [open, setOpen] = useState(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -77,10 +81,11 @@ const Settings: React.FC<SettingsProps> = ({ setModes }) => {
         duration: data["long break"] * 60,
       },
     }));
+    setOpen(false);
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
         <img src={SettingsLogo} alt="settings" />
       </DialogTrigger>
