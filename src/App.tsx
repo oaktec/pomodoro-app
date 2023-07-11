@@ -4,8 +4,8 @@ import TimerModeSelect from "./components/TimerModeSelect";
 import Logo from "./assets/Logo.svg";
 import MainTimer from "./components/MainTimer";
 import Settings from "./components/Settings";
-
 import alarmSound from "./assets/alarm.wav";
+import { formatTime } from "./lib/utils";
 
 function App() {
   const [mode, setMode] = useState<"focus" | "short break" | "long break">(
@@ -38,7 +38,8 @@ function App() {
       setIsRunning(false);
       void sound.current.play();
     }
-  }, [timeRemaining]);
+    document.title = `${formatTime(timeRemaining)} - ${mode} | pomodoro timer`;
+  }, [timeRemaining, mode]);
 
   useEffect(() => {
     setTimeRemaining(modes[mode].duration);
