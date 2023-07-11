@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import TimerModeSelect from "./components/TimerModeSelect";
-
 import Logo from "./assets/Logo.svg";
 import MainTimer from "./components/MainTimer";
 import Settings from "./components/Settings";
+
+import alarmSound from "./assets/alarm.wav";
 
 function App() {
   const [mode, setMode] = useState<"pomodoro" | "short break" | "long break">(
@@ -29,6 +30,15 @@ function App() {
       colorName: "purple",
     },
   });
+
+  const sound = useRef(new Audio(alarmSound));
+
+  useEffect(() => {
+    if (timeRemaining === 0) {
+      setIsRunning(false);
+      void sound.current.play();
+    }
+  }, [timeRemaining]);
 
   useEffect(() => {
     setTimeRemaining(modes[mode].duration);
