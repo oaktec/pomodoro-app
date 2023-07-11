@@ -17,6 +17,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, ...props }, ref) => {
     const [upHovered, setUpHovered] = React.useState(false);
     const [downHovered, setDownHovered] = React.useState(false);
+    const [upDisabled, setUpDisabled] = React.useState(false);
+    const [downDisabled, setDownDisabled] = React.useState(false);
 
     const { setValue } = useFormContext();
 
@@ -24,6 +26,11 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       if (props.name && props.value) {
         if (Number(props.value) > 99) setValue(props.name, 99);
         if (Number(props.value) < 1) setValue(props.name, 1);
+
+        if (Number(props.value) >= 99) setUpDisabled(true);
+        else setUpDisabled(false);
+        if (Number(props.value) <= 1) setDownDisabled(true);
+        else setDownDisabled(false);
       }
     }, [props.name, props.value, setValue]);
 
@@ -31,6 +38,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       if (props.name && props.value) {
         if (Number(props.value) >= 99) return;
         setValue(props.name, Number(props.value) + 1);
+      } else if (props.name) {
+        setValue(props.name, 1);
       }
     };
     const handleDecrement = () => {
@@ -53,32 +62,40 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         />
         {type === "number" && (
           <div className="absolute right-1 top-0 flex h-full flex-col">
-            <button
-              type="button"
-              className="flex h-full w-full flex-1 items-end pl-2 pr-2"
-              onMouseEnter={() => setUpHovered(true)}
-              onMouseLeave={() => setUpHovered(false)}
-              onClick={handleIncrement}
-            >
-              <img
-                className="mb-1 pt-1.5"
-                src={upHovered ? iconArrowUpHover : iconArrowUp}
-                alt="arrow up"
-              />
-            </button>
-            <button
-              type="button"
-              className="flex h-full w-full flex-1 items-start pl-2 pr-2"
-              onMouseEnter={() => setDownHovered(true)}
-              onMouseLeave={() => setDownHovered(false)}
-              onClick={handleDecrement}
-            >
-              <img
-                className="visible mt-1 pb-1.5"
-                src={downHovered ? iconArrowDownHover : iconArrowDown}
-                alt="arrow down"
-              />
-            </button>
+            {upDisabled ? (
+              <div className="flex h-full w-full flex-1 items-end pl-2 pr-2"></div>
+            ) : (
+              <button
+                type="button"
+                className="flex h-full w-full flex-1 items-end pl-2 pr-2"
+                onMouseEnter={() => setUpHovered(true)}
+                onMouseLeave={() => setUpHovered(false)}
+                onClick={handleIncrement}
+              >
+                <img
+                  className="mb-1 pt-1.5"
+                  src={upHovered ? iconArrowUpHover : iconArrowUp}
+                  alt="arrow up"
+                />
+              </button>
+            )}
+            {downDisabled ? (
+              <div className="flex h-full w-full flex-1 items-start pl-2 pr-2"></div>
+            ) : (
+              <button
+                type="button"
+                className="flex h-full w-full flex-1 items-start pl-2 pr-2"
+                onMouseEnter={() => setDownHovered(true)}
+                onMouseLeave={() => setDownHovered(false)}
+                onClick={handleDecrement}
+              >
+                <img
+                  className="visible mt-1 pb-1.5"
+                  src={downHovered ? iconArrowDownHover : iconArrowDown}
+                  alt="arrow down"
+                />
+              </button>
+            )}
           </div>
         )}
       </div>
