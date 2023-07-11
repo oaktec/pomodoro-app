@@ -20,6 +20,13 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     const { setValue } = useFormContext();
 
+    React.useEffect(() => {
+      if (props.name && props.value) {
+        if (Number(props.value) > 99) setValue(props.name, 99);
+        if (Number(props.value) < 1) setValue(props.name, 1);
+      }
+    }, [props.name, props.value, setValue]);
+
     const handleIncrement = () => {
       if (props.name && props.value) {
         if (Number(props.value) >= 99) return;
