@@ -101,7 +101,7 @@ const Settings: React.FC<SettingsProps> = ({ setModes }) => {
             className=""
           >
             <TypographyH3 className="mb-[18px]">Time (Minutes)</TypographyH3>
-            <div className="ml-6 mr-6 flex flex-col justify-center gap-2 border-light-gray sm:ml-10 sm:mr-10 sm:flex-row sm:justify-between sm:gap-5 sm:border-b">
+            <div className="ml-6 mr-6 flex flex-col justify-center gap-2 border-light-gray sm:ml-10 sm:mr-10 sm:flex-row sm:justify-between sm:gap-5">
               <FormField
                 control={form.control}
                 name="focus"
@@ -132,7 +132,7 @@ const Settings: React.FC<SettingsProps> = ({ setModes }) => {
                 control={form.control}
                 name="long break"
                 render={({ field }) => (
-                  <FormItem className="border-b border-light-gray pb-6 sm:border-none">
+                  <FormItem className="pb-8">
                     <FormLabel>long break</FormLabel>
                     <FormControl>
                       <Input type="number" {...field} />
@@ -142,7 +142,6 @@ const Settings: React.FC<SettingsProps> = ({ setModes }) => {
                 )}
               />
             </div>
-            {/* <TypographyH3 className="mb-[10px]">FONT</TypographyH3> */}
             <DialogFooter>
               <Button type="submit">Apply</Button>
             </DialogFooter>
