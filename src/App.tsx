@@ -3,8 +3,8 @@ import { useState, useEffect } from "react";
 import TimerModeSelect from "./components/TimerModeSelect";
 
 import Logo from "./assets/Logo.svg";
-import SettingsLogo from "./assets/icon-settings.svg";
 import MainTimer from "./components/MainTimer";
+import Settings from "./components/Settings";
 
 function App() {
   const [mode, setMode] = useState<"pomodoro" | "short break" | "long break">(
@@ -71,9 +71,7 @@ function App() {
               setIsRunning(!isRunning);
             }}
           />
-          <button>
-            <img src={SettingsLogo} alt="settings" />
-          </button>
+          <Settings />
         </div>
       </main>
     </div>

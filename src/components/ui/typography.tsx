@@ -36,7 +36,7 @@ const TypographyH3 = React.forwardRef<
   <h3
     ref={ref}
     className={cn(
-      "text-base font-bold uppercase tracking-[0.9375rem]",
+      "text-center text-[11px] font-bold uppercase tracking-[4.231px] text-midnight sm:text-[13px] sm:tracking-[5px]",
       className
     )}
     {...props}
@@ -51,7 +51,7 @@ const TypographyH4 = React.forwardRef<
   <h4
     ref={ref}
     className={cn(
-      "text-[0.8125rem] font-bold uppercase tracking-[0.3125rem]",
+      "text-[0.8125rem] font-bold uppercase tracking-[0.3125rem] text-midnight",
       className
     )}
     {...props}
