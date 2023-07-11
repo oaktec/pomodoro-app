@@ -3,6 +3,7 @@ import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 
 import { cn } from "@/lib/utils";
+import { formatTime } from "@/lib/utils";
 
 export interface MainTimerProps {
   className?: string;
@@ -27,15 +28,6 @@ const MainTimer: React.FC<MainTimerProps> = ({
   modes,
   onPlayPause,
 }) => {
-  const formatTime = (time: number) => {
-    const minutes = Math.floor(time / 60);
-    const seconds = time % 60;
-
-    return `${minutes < 10 ? "0" + minutes.toString() : minutes}:${
-      seconds < 10 ? "0" + seconds.toString() : seconds
-    }`;
-  };
-
   return (
     <button
       className={cn(
