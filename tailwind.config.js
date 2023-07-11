@@ -34,6 +34,7 @@ module.exports = {
         "background-foreground": "hsl(var(--background-foreground))",
 
         red: "hsl(var(--red))",
+        "light-gray": "hsl(var(--light-gray))",
         "pale-red": "hsl(var(--pale-red))",
         white: "hsl(var(--white))",
         "off-white": "hsl(var(--off-white))",
