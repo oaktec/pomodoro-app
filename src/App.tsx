@@ -30,13 +30,19 @@ function App() {
       colorName: "purple",
     },
   });
-
   const sound = useRef(new Audio(alarmSound));
+
+  useEffect(() => {
+    if ("Notification" in window) {
+      void Notification.requestPermission();
+    }
+  }, []);
 
   useEffect(() => {
     if (timeRemaining === 0) {
       setIsRunning(false);
       void sound.current.play();
+      showNotification();
     }
     document.title = `${formatTime(timeRemaining)} - ${mode} | pomodoro timer`;
   }, [timeRemaining, mode]);
@@ -60,6 +66,14 @@ function App() {
       };
     }
   }, [isRunning]);
+
+  const showNotification = () => {
+    if ("Notification" in window && Notification.permission === "granted") {
+      void new Notification("Time's up!", {
+        body: `Your ${mode} is over.`,
+      });
+    }
+  };
 
   const onPlayPause = () => {
     if (timeRemaining === 0 && !isRunning) {
