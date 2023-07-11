@@ -61,6 +61,13 @@ function App() {
     }
   }, [isRunning]);
 
+  const onPlayPause = () => {
+    if (timeRemaining === 0 && !isRunning) {
+      setTimeRemaining(modes[mode].duration);
+    }
+    setIsRunning((isRunning) => !isRunning);
+  };
+
   return (
     <div className="container flex h-screen flex-col">
       <header className="flex justify-center">
@@ -86,9 +93,7 @@ function App() {
             modes={modes}
             timeRemaining={timeRemaining}
             isRunning={isRunning}
-            onPlayPause={() => {
-              setIsRunning(!isRunning);
-            }}
+            onPlayPause={onPlayPause}
           />
           <Settings setModes={setModes} />
         </div>
