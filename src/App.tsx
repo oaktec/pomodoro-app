@@ -127,7 +127,25 @@ function App() {
             isRunning={isRunning}
             onPlayPause={onPlayPause}
           />
-          <Settings setModes={setModes} />
+          <Settings
+            setModes={
+              setModes as React.Dispatch<
+                React.SetStateAction<{
+                  focus: { label: string; duration: number; colorName: string };
+                  "short break": {
+                    label: string;
+                    duration: number;
+                    colorName: string;
+                  };
+                  "long break": {
+                    label: string;
+                    duration: number;
+                    colorName: string;
+                  };
+                }>
+              >
+            }
+          />
         </div>
       </main>
     </div>
