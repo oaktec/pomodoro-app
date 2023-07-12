@@ -39,6 +39,10 @@ function App() {
   );
   const [timeRemaining, setTimeRemaining] = useState(modes[mode].duration);
   const [isRunning, setIsRunning] = useState(false);
+  const [isFocussed, setIsFocussed] = useState(false);
+
+  const [dailyFocusTime, setDailyFocusTime] = useState(0);
+  const [today, setToday] = useState(new Date().toLocaleDateString());
 
   const sound = useRef(new Audio(alarmSound));
   const modeRef = useRef(mode);
@@ -58,6 +62,11 @@ function App() {
       setIsRunning(false);
       void sound.current.play();
       showNotification();
+      if (modeRef.current === "focus") {
+        setMode("short break");
+      } else {
+        setMode("focus");
+      }
     }
     document.title = `${formatTime(timeRemaining)} - ${
       modeRef.current
@@ -71,6 +80,7 @@ function App() {
   useEffect(() => {
     modeRef.current = mode;
     setIsRunning(false);
+    setIsFocussed(false);
   }, [mode]);
 
   useEffect(() => {
@@ -85,6 +95,18 @@ function App() {
     }
   }, [isRunning]);
 
+  useEffect(() => {
+    if (isFocussed) {
+      const timer = setInterval(() => {
+        setDailyFocusTime((dailyFocusTime) => dailyFocusTime + 1);
+      }, 1000);
+
+      return () => {
+        clearInterval(timer);
+      };
+    }
+  }, [isFocussed]);
+
   const showNotification = () => {
     if ("Notification" in window && Notification.permission === "granted") {
       void new Notification("Time's up!", {
@@ -98,6 +120,11 @@ function App() {
       setTimeRemaining(modes[mode].duration);
     }
     setIsRunning((isRunning) => !isRunning);
+    if (mode === "focus" && !isRunning) {
+      setIsFocussed(true);
+    } else {
+      setIsFocussed(false);
+    }
   };
 
   return (
@@ -124,6 +151,7 @@ function App() {
             mode={mode}
             modes={modes}
             timeRemaining={timeRemaining}
+            dailyFocusTime={dailyFocusTime}
             isRunning={isRunning}
             onPlayPause={onPlayPause}
           />
