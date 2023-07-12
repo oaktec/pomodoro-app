@@ -128,7 +128,6 @@ const Settings: React.FC<SettingsProps> = ({ modes, setModes }) => {
                     <FormControl>
                       <Input type="number" {...field} />
                     </FormControl>
-                    {/* <FormMessage /> */}
                   </FormItem>
                 )}
               />
@@ -141,7 +140,6 @@ const Settings: React.FC<SettingsProps> = ({ modes, setModes }) => {
                     <FormControl>
                       <Input type="number" {...field} />
                     </FormControl>
-                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -154,7 +152,6 @@ const Settings: React.FC<SettingsProps> = ({ modes, setModes }) => {
                     <FormControl>
                       <Input type="number" {...field} />
                     </FormControl>
-                    <FormMessage />
                   </FormItem>
                 )}
               />
