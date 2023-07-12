@@ -41,6 +41,7 @@ function App() {
   const [isRunning, setIsRunning] = useState(false);
 
   const sound = useRef(new Audio(alarmSound));
+  const modeRef = useRef(mode);
 
   useEffect(() => {
     localStorage.setItem("modes", JSON.stringify(modes));
@@ -58,14 +59,17 @@ function App() {
       void sound.current.play();
       showNotification();
     }
-    document.title = `${formatTime(timeRemaining)} - ${mode} | pomodoro timer`;
-  }, [timeRemaining, mode]);
+    document.title = `${formatTime(timeRemaining)} - ${
+      modeRef.current
+    } | pomodoro timer`;
+  }, [timeRemaining]);
 
   useEffect(() => {
     setTimeRemaining(modes[mode].duration);
   }, [mode, modes]);
 
   useEffect(() => {
+    modeRef.current = mode;
     setIsRunning(false);
   }, [mode]);
 
@@ -84,7 +88,7 @@ function App() {
   const showNotification = () => {
     if ("Notification" in window && Notification.permission === "granted") {
       void new Notification("Time's up!", {
-        body: `Your ${mode} is over.`,
+        body: `Your ${modeRef.current} is over.`,
       });
     }
   };
