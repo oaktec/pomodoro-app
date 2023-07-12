@@ -80,7 +80,6 @@ function App() {
   useEffect(() => {
     modeRef.current = mode;
     setIsRunning(false);
-    setIsFocussed(false);
   }, [mode]);
 
   useEffect(() => {
@@ -141,9 +140,10 @@ function App() {
           className="mb-12"
           selected={mode}
           modes={modes}
-          onSelect={(mode: "focus" | "short break" | "long break") =>
-            setMode(mode)
-          }
+          onSelect={(mode: "focus" | "short break" | "long break") => {
+            setMode(mode);
+            setIsFocussed(false);
+          }}
         />
         <div className="flex flex-1 flex-col items-center justify-around">
           <MainTimer
