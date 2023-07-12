@@ -5,7 +5,7 @@ import Logo from "./assets/Logo.svg";
 import MainTimer from "./components/MainTimer";
 import Settings from "./components/Settings";
 import alarmSound from "./assets/alarm.wav";
-import { formatTime } from "./lib/utils";
+import { formatTimeMinsSeconds } from "./lib/utils";
 
 function App() {
   const [mode, setMode] = useState<"focus" | "short break" | "long break">(
@@ -84,7 +84,7 @@ function App() {
         setMode("focus");
       }
     }
-    document.title = `${formatTime(timeRemaining)} - ${
+    document.title = `${formatTimeMinsSeconds(timeRemaining)} - ${
       modeRef.current
     } | pomodoro timer`;
   }, [timeRemaining]);
