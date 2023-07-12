@@ -41,8 +41,12 @@ function App() {
   const [isRunning, setIsRunning] = useState(false);
   const [isFocussed, setIsFocussed] = useState(false);
 
-  const [dailyFocusTime, setDailyFocusTime] = useState(0);
-  const [today, setToday] = useState(new Date().toLocaleDateString());
+  const [dailyFocusTime, setDailyFocusTime] = useState(
+    Number(localStorage.getItem("dailyFocusTime")) || 0
+  );
+  const [today, setToday] = useState(
+    localStorage.getItem("today") || new Date().toLocaleDateString()
+  );
 
   const sound = useRef(new Audio(alarmSound));
   const modeRef = useRef(mode);
@@ -55,7 +59,19 @@ function App() {
     if ("Notification" in window) {
       void Notification.requestPermission();
     }
+
+    if (localStorage.getItem("today") !== new Date().toLocaleDateString()) {
+      setToday(new Date().toLocaleDateString());
+      setDailyFocusTime(0);
+    }
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem("dailyFocusTime", dailyFocusTime.toString());
+  }, [dailyFocusTime]);
+  useEffect(() => {
+    localStorage.setItem("today", today);
+  }, [today]);
 
   useEffect(() => {
     if (timeRemaining === 0) {
