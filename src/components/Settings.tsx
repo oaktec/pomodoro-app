@@ -31,6 +31,23 @@ const formSchema = z.object({
 });
 
 export interface SettingsProps {
+  modes: {
+    focus: {
+      label: string;
+      duration: number;
+      colorName: string;
+    };
+    "short break": {
+      label: string;
+      duration: number;
+      colorName: string;
+    };
+    "long break": {
+      label: string;
+      duration: number;
+      colorName: string;
+    };
+  };
   setModes: (
     value: React.SetStateAction<{
       focus: {
@@ -52,15 +69,15 @@ export interface SettingsProps {
   ) => void;
 }
 
-const Settings: React.FC<SettingsProps> = ({ setModes }) => {
+const Settings: React.FC<SettingsProps> = ({ modes, setModes }) => {
   const [open, setOpen] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      focus: 25,
-      "short break": 5,
-      "long break": 15,
+      focus: modes.focus.duration / 60,
+      "short break": modes["short break"].duration / 60,
+      "long break": modes["long break"].duration / 60,
     },
   });
 

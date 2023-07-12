@@ -128,6 +128,21 @@ function App() {
             onPlayPause={onPlayPause}
           />
           <Settings
+            modes={
+              modes as {
+                focus: { label: string; duration: number; colorName: string };
+                "short break": {
+                  label: string;
+                  duration: number;
+                  colorName: string;
+                };
+                "long break": {
+                  label: string;
+                  duration: number;
+                  colorName: string;
+                };
+              }
+            }
             setModes={
               setModes as React.Dispatch<
                 React.SetStateAction<{
