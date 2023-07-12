@@ -25,10 +25,6 @@ input[type="number"] {
   box-shadow: 50px 50px 100px 0px #121530, -50px -50px 100px 0px #272c5a;
 }
 
-.mobile-safari-height-fix {
-  height: -webkit-fill-available;
-}
-
 @layer base {
   :root {
     --background: 235 35% 18%;
