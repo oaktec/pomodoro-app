@@ -6,6 +6,7 @@ import MainTimer from "./components/MainTimer";
 import Settings from "./components/Settings";
 import alarmSound from "./assets/alarm.wav";
 import { formatTimeMinsSeconds } from "./lib/utils";
+import PomoCount from "./components/PomoCount";
 
 function App() {
   const [mode, setMode] = useState<"focus" | "short break" | "long break">(
@@ -37,6 +38,9 @@ function App() {
         },
       }
   );
+  const [pomoCount, setPomoCount] = useState(
+    Number(localStorage.getItem("pomoCount")) || 0
+  );
   const [timeRemaining, setTimeRemaining] = useState(modes[mode].duration);
   const [isRunning, setIsRunning] = useState(false);
   const [isFocussed, setIsFocussed] = useState(false);
@@ -51,9 +55,19 @@ function App() {
   const sound = useRef(new Audio(alarmSound));
   const modeRef = useRef(mode);
 
+  // Save to local storage
   useEffect(() => {
     localStorage.setItem("modes", JSON.stringify(modes));
   }, [modes]);
+  useEffect(() => {
+    localStorage.setItem("dailyFocusTime", dailyFocusTime.toString());
+  }, [dailyFocusTime]);
+  useEffect(() => {
+    localStorage.setItem("today", today);
+  }, [today]);
+  useEffect(() => {
+    localStorage.setItem("pomoCount", pomoCount.toString());
+  }, [pomoCount]);
 
   useEffect(() => {
     if ("Notification" in window) {
@@ -63,15 +77,9 @@ function App() {
     if (localStorage.getItem("today") !== new Date().toLocaleDateString()) {
       setToday(new Date().toLocaleDateString());
       setDailyFocusTime(0);
+      setPomoCount(0);
     }
   }, []);
-
-  useEffect(() => {
-    localStorage.setItem("dailyFocusTime", dailyFocusTime.toString());
-  }, [dailyFocusTime]);
-  useEffect(() => {
-    localStorage.setItem("today", today);
-  }, [today]);
 
   useEffect(() => {
     if (timeRemaining === 0) {
@@ -79,6 +87,7 @@ function App() {
       void sound.current.play();
       showNotification();
       if (modeRef.current === "focus") {
+        setPomoCount((pomoCount) => pomoCount + 1);
         setMode("short break");
       } else {
         setMode("focus");
@@ -140,6 +149,9 @@ function App() {
     } else {
       setIsFocussed(false);
     }
+    if (mode === "long break" && !isRunning) {
+      setPomoCount(0);
+    }
   };
 
   return (
@@ -153,7 +165,6 @@ function App() {
       </header>
       <main className="mt-11 flex flex-1 flex-col items-center sm:mt-14">
         <TimerModeSelect
-          className="mb-12"
           selected={mode}
           modes={modes}
           onSelect={(mode: "focus" | "short break" | "long break") => {
@@ -161,6 +172,7 @@ function App() {
             setIsFocussed(false);
           }}
         />
+        <PomoCount count={pomoCount} />
         <div className="flex flex-1 flex-col items-center justify-around">
           <MainTimer
             className="mb-6"
