@@ -11,26 +11,40 @@ function App() {
   const [mode, setMode] = useState<"focus" | "short break" | "long break">(
     "focus"
   );
-  const [timeRemaining, setTimeRemaining] = useState(1500);
+  const [modes, setModes] = useState(
+    () =>
+      (JSON.parse(localStorage.getItem("modes")!) as {
+        [key: string]: {
+          label: string;
+          duration: number;
+          colorName: string;
+        };
+      }) || {
+        focus: {
+          label: "focus",
+          duration: 1500,
+          colorName: "red",
+        },
+        "short break": {
+          label: "short break",
+          duration: 300,
+          colorName: "teal",
+        },
+        "long break": {
+          label: "long break",
+          duration: 900,
+          colorName: "purple",
+        },
+      }
+  );
+  const [timeRemaining, setTimeRemaining] = useState(modes[mode].duration);
   const [isRunning, setIsRunning] = useState(false);
-  const [modes, setModes] = useState({
-    focus: {
-      label: "focus",
-      duration: 1500,
-      colorName: "red",
-    },
-    "short break": {
-      label: "short break",
-      duration: 300,
-      colorName: "teal",
-    },
-    "long break": {
-      label: "long break",
-      duration: 900,
-      colorName: "purple",
-    },
-  });
+
   const sound = useRef(new Audio(alarmSound));
+
+  useEffect(() => {
+    localStorage.setItem("modes", JSON.stringify(modes));
+  }, [modes]);
 
   useEffect(() => {
     if ("Notification" in window) {
