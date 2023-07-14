@@ -8,17 +8,17 @@ import alarmSound from "./assets/alarm.wav";
 import { formatTimeMinsSeconds } from "./lib/utils";
 import PomoCount from "./components/PomoCount";
 
-type ModeType = "focus" | "short break" | "long break";
+type Mode = "focus" | "short break" | "long break";
 
-type ModesType = {
-  [key in ModeType]: {
+type Modes = {
+  [key in Mode]: {
     label: string;
     duration: number;
     colorName: string;
   };
 };
 
-const defaultModes: ModesType = {
+const defaultModes: Modes = {
   focus: {
     label: "focus",
     duration: 1500,
@@ -37,8 +37,8 @@ const defaultModes: ModesType = {
 };
 
 export const App = () => {
-  const [mode, setMode] = useState<ModeType>("focus");
-  const [modes, setModes] = useLocalStorage<ModesType>("modes", defaultModes);
+  const [mode, setMode] = useState<Mode>("focus");
+  const [modes, setModes] = useLocalStorage<Modes>("modes", defaultModes);
   const [pomoCount, setPomoCount] = useLocalStorage<number>("pomoCount", 0);
   const [dailyFocusTime, setDailyFocusTime] = useLocalStorage<number>(
     "dailyFocusTime",
