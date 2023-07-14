@@ -1,5 +1,4 @@
-import { useState, useEffect, useRef } from "react";
-import useLocalStorage from "./hooks/useLocalStorage";
+import { useState, useEffect, useRef, useCallback } from "react";
 import TimerModeSelect from "./components/TimerModeSelect";
 import Logo from "./assets/Logo.svg";
 import MainTimer from "./components/MainTimer";
@@ -8,9 +7,12 @@ import alarmSound from "./assets/alarm.wav";
 import { formatTimeMinsSeconds } from "./lib/utils";
 import PomoCount from "./components/PomoCount";
 
-type Mode = "focus" | "short break" | "long break";
+import useLocalStorage from "./hooks/useLocalStorage";
+import useTimer from "./hooks/useTimer";
 
-type Modes = {
+export type Mode = "focus" | "short break" | "long break";
+
+export type Modes = {
   [key in Mode]: {
     label: string;
     duration: number;
@@ -36,7 +38,7 @@ const defaultModes: Modes = {
   },
 };
 
-export const App = () => {
+export const App: React.FC = () => {
   const [mode, setMode] = useState<Mode>("focus");
   const [modes, setModes] = useLocalStorage<Modes>("modes", defaultModes);
   const [pomoCount, setPomoCount] = useLocalStorage<number>("pomoCount", 0);
@@ -49,118 +51,51 @@ export const App = () => {
     new Date().toLocaleDateString()
   );
 
-  const [timeRemaining, setTimeRemaining] = useState(modes[mode].duration);
-  const [timerStartTime, setTimerStartTime] = useState<Date | null>(null);
-  const [timerStartAmount, setTimerStartAmount] = useState(
-    modes[mode].duration
-  );
-  const [isRunning, setIsRunning] = useState(false);
-  const [isFocussed, setIsFocussed] = useState(false);
-  const [lastFocusTimerAdded, setLastFocusTimerAdded] = useState<Date | null>(
-    null
+  const { isRunning, elapsedTime, toggleTimer, resetTimer } = useTimer();
+
+  const timeRemaining = Math.max(
+    0,
+    Math.floor(modes[mode].duration - elapsedTime)
   );
 
   const sound = useRef(new Audio(alarmSound));
   const modeRef = useRef(mode);
-
-  // Save to local storage
-  useEffect(() => {
-    localStorage.setItem("modes", JSON.stringify(modes));
-  }, [modes]);
-  useEffect(() => {
-    localStorage.setItem("dailyFocusTime", dailyFocusTime.toString());
-  }, [dailyFocusTime]);
-  useEffect(() => {
-    localStorage.setItem("today", today);
-  }, [today]);
-  useEffect(() => {
-    localStorage.setItem("pomoCount", pomoCount.toString());
-  }, [pomoCount]);
 
   useEffect(() => {
     if ("Notification" in window) {
       void Notification.requestPermission();
     }
 
-    if (localStorage.getItem("today") !== new Date().toLocaleDateString()) {
+    if (today !== new Date().toLocaleDateString()) {
       setToday(new Date().toLocaleDateString());
       setDailyFocusTime(0);
       setPomoCount(0);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    if (timeRemaining === 0) {
-      setIsRunning(false);
+    modeRef.current = mode;
+    resetTimer();
+  }, [mode]);
+
+  useEffect(() => {
+    if (elapsedTime >= modes[mode].duration) {
+      toggleTimer();
       void sound.current.play();
       showNotification();
-      if (modeRef.current === "focus") {
+
+      if (mode === "focus") {
         setPomoCount((pomoCount) => pomoCount + 1);
         setMode("short break");
       } else {
         setMode("focus");
       }
     }
-    document.title = `${formatTimeMinsSeconds(timeRemaining)} - ${
-      modeRef.current
-    } | pomodoro timer`;
-  }, [timeRemaining]);
-
-  useEffect(() => {
-    setTimeRemaining(modes[mode].duration);
-    setTimerStartAmount(modes[mode].duration);
-  }, [mode, modes]);
-
-  useEffect(() => {
-    modeRef.current = mode;
-    setIsRunning(false);
-  }, [mode]);
-
-  useEffect(() => {
-    if (isRunning) {
-      if (!timerStartTime) setTimerStartTime(new Date());
-      const timer = setInterval(() => {
-        if (timerStartTime) {
-          const elapsedSeconds = Math.floor(
-            (new Date().getTime() - timerStartTime.getTime()) / 1000
-          );
-          setTimeRemaining(Math.max(0, timerStartAmount - elapsedSeconds));
-        }
-      }, 1000);
-
-      return () => {
-        clearInterval(timer);
-      };
-    }
-  }, [isRunning, timerStartTime, timerStartAmount]);
-
-  useEffect(() => {
-    if (isFocussed) {
-      if (!lastFocusTimerAdded) setLastFocusTimerAdded(new Date());
-      const timer = setInterval(() => {
-        if (lastFocusTimerAdded) {
-          setDailyFocusTime(
-            (dailyFocusTime) =>
-              dailyFocusTime +
-              Math.floor(
-                (new Date().getTime() - lastFocusTimerAdded.getTime()) / 1000
-              )
-          );
-          setLastFocusTimerAdded(new Date());
-        }
-      }, 1000);
-
-      return () => {
-        clearInterval(timer);
-      };
-    }
-  }, [isFocussed, lastFocusTimerAdded]);
-
-  useEffect(() => {
-    if (!isFocussed) {
-      setLastFocusTimerAdded(null);
-    }
-  }, [isFocussed]);
+    document.title = `${formatTimeMinsSeconds(
+      timeRemaining
+    )} - ${mode} | pomodoro timer`;
+  }, [timeRemaining, elapsedTime, modes, mode, toggleTimer, setPomoCount]);
 
   const showNotification = () => {
     if ("Notification" in window && Notification.permission === "granted") {
@@ -171,23 +106,7 @@ export const App = () => {
   };
 
   const onPlayPause = () => {
-    if (timeRemaining === 0 && !isRunning) {
-      setTimeRemaining(modes[mode].duration);
-      setTimerStartAmount(modes[mode].duration);
-    }
-    setIsRunning((isRunning) => !isRunning);
-    if (!isRunning) {
-      setTimerStartTime(new Date());
-      setTimerStartAmount(timeRemaining);
-    }
-    if (mode === "focus" && !isRunning) {
-      setIsFocussed(true);
-    } else {
-      setIsFocussed(false);
-    }
-    if (mode === "long break" && !isRunning) {
-      setPomoCount(0);
-    }
+    toggleTimer();
   };
 
   return (
@@ -205,7 +124,7 @@ export const App = () => {
           modes={modes}
           onSelect={(mode: "focus" | "short break" | "long break") => {
             setMode(mode);
-            setIsFocussed(false);
+            // setIsFocussed(false);
           }}
         />
         <PomoCount count={pomoCount} />
