@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-
+import { useLocalStorage } from "./hooks/useLocalStorage";
 import TimerModeSelect from "./components/TimerModeSelect";
 import Logo from "./assets/Logo.svg";
 import MainTimer from "./components/MainTimer";
@@ -8,48 +8,56 @@ import alarmSound from "./assets/alarm.wav";
 import { formatTimeMinsSeconds } from "./lib/utils";
 import PomoCount from "./components/PomoCount";
 
-function App() {
-  const [mode, setMode] = useState<"focus" | "short break" | "long break">(
-    "focus"
+type ModeType = "focus" | "short break" | "long break";
+
+type ModesType = {
+  [key in ModeType]: {
+    label: string;
+    duration: number;
+    colorName: string;
+  };
+};
+
+const defaultModes: ModesType = {
+  focus: {
+    label: "focus",
+    duration: 1500,
+    colorName: "red",
+  },
+  "short break": {
+    label: "short break",
+    duration: 300,
+    colorName: "teal",
+  },
+  "long break": {
+    label: "long break",
+    duration: 900,
+    colorName: "purple",
+  },
+};
+
+export const App = () => {
+  const [mode, setMode] = useState<ModeType>("focus");
+  const [modes, setModes] = useLocalStorage<ModesType>("modes", defaultModes);
+  const [pomoCount, setPomoCount] = useLocalStorage<number>("pomoCount", 0);
+  const [dailyFocusTime, setDailyFocusTime] = useLocalStorage<number>(
+    "dailyFocusTime",
+    0
   );
-  const [modes, setModes] = useState(
-    () =>
-      (JSON.parse(localStorage.getItem("modes")!) as {
-        [key: string]: {
-          label: string;
-          duration: number;
-          colorName: string;
-        };
-      }) || {
-        focus: {
-          label: "focus",
-          duration: 1500,
-          colorName: "red",
-        },
-        "short break": {
-          label: "short break",
-          duration: 300,
-          colorName: "teal",
-        },
-        "long break": {
-          label: "long break",
-          duration: 900,
-          colorName: "purple",
-        },
-      }
+  const [today, setToday] = useLocalStorage<string>(
+    "today",
+    new Date().toLocaleDateString()
   );
-  const [pomoCount, setPomoCount] = useState(
-    Number(localStorage.getItem("pomoCount")) || 0
-  );
+
   const [timeRemaining, setTimeRemaining] = useState(modes[mode].duration);
+  const [timerStartTime, setTimerStartTime] = useState<Date | null>(null);
+  const [timerStartAmount, setTimerStartAmount] = useState(
+    modes[mode].duration
+  );
   const [isRunning, setIsRunning] = useState(false);
   const [isFocussed, setIsFocussed] = useState(false);
-
-  const [dailyFocusTime, setDailyFocusTime] = useState(
-    Number(localStorage.getItem("dailyFocusTime")) || 0
-  );
-  const [today, setToday] = useState(
-    localStorage.getItem("today") || new Date().toLocaleDateString()
+  const [lastFocusTimerAdded, setLastFocusTimerAdded] = useState<Date | null>(
+    null
   );
 
   const sound = useRef(new Audio(alarmSound));
@@ -100,6 +108,7 @@ function App() {
 
   useEffect(() => {
     setTimeRemaining(modes[mode].duration);
+    setTimerStartAmount(modes[mode].duration);
   }, [mode, modes]);
 
   useEffect(() => {
@@ -109,25 +118,47 @@ function App() {
 
   useEffect(() => {
     if (isRunning) {
+      if (!timerStartTime) setTimerStartTime(new Date());
       const timer = setInterval(() => {
-        setTimeRemaining((timeRemaining) => timeRemaining - 1);
+        if (timerStartTime) {
+          const elapsedSeconds = Math.floor(
+            (new Date().getTime() - timerStartTime.getTime()) / 1000
+          );
+          setTimeRemaining(Math.max(0, timerStartAmount - elapsedSeconds));
+        }
       }, 1000);
 
       return () => {
         clearInterval(timer);
       };
     }
-  }, [isRunning]);
+  }, [isRunning, timerStartTime, timerStartAmount]);
 
   useEffect(() => {
     if (isFocussed) {
+      if (!lastFocusTimerAdded) setLastFocusTimerAdded(new Date());
       const timer = setInterval(() => {
-        setDailyFocusTime((dailyFocusTime) => dailyFocusTime + 1);
+        if (lastFocusTimerAdded) {
+          setDailyFocusTime(
+            (dailyFocusTime) =>
+              dailyFocusTime +
+              Math.floor(
+                (new Date().getTime() - lastFocusTimerAdded.getTime()) / 1000
+              )
+          );
+          setLastFocusTimerAdded(new Date());
+        }
       }, 1000);
 
       return () => {
         clearInterval(timer);
       };
+    }
+  }, [isFocussed, lastFocusTimerAdded]);
+
+  useEffect(() => {
+    if (!isFocussed) {
+      setLastFocusTimerAdded(null);
     }
   }, [isFocussed]);
 
@@ -142,8 +173,13 @@ function App() {
   const onPlayPause = () => {
     if (timeRemaining === 0 && !isRunning) {
       setTimeRemaining(modes[mode].duration);
+      setTimerStartAmount(modes[mode].duration);
     }
     setIsRunning((isRunning) => !isRunning);
+    if (!isRunning) {
+      setTimerStartTime(new Date());
+      setTimerStartAmount(timeRemaining);
+    }
     if (mode === "focus" && !isRunning) {
       setIsFocussed(true);
     } else {
@@ -221,6 +257,6 @@ function App() {
       </main>
     </div>
   );
-}
+};
 
 export default App;
