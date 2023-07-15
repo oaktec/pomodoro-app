@@ -10,9 +10,9 @@ interface TimerState {
 
 const useTimer = (startingElapsedSeconds = 0): TimerState => {
   const [isRunning, setIsRunning] = useState(false);
-  const [elapsedTime, setElapsedTime] = useState(0);
-  const startTime = useRef<number | null>(null);
   const accumulatedTime = useRef(startingElapsedSeconds * 1000);
+  const [elapsedTime, setElapsedTime] = useState(accumulatedTime.current);
+  const startTime = useRef<number | null>(null);
 
   const toggleTimer = () => {
     setIsRunning((prev) => {
@@ -35,16 +35,18 @@ const useTimer = (startingElapsedSeconds = 0): TimerState => {
     startTime.current = null;
   }, []);
 
-  const setElapsedSeconds = (elapsedSeconds: number) => {
+  const setElapsedSeconds = useCallback((elapsedSeconds: number) => {
     accumulatedTime.current = elapsedSeconds * 1000;
-  };
+    setElapsedTime(accumulatedTime.current);
+  }, []);
 
   useEffect(() => {
     if (isRunning && startTime.current !== null) {
       const intervalId = setInterval(() => {
-        setElapsedTime(
-          accumulatedTime.current + Date.now() - (startTime.current || 0)
-        );
+        if (startTime.current !== null)
+          setElapsedTime(
+            accumulatedTime.current + Date.now() - startTime.current
+          );
       }, 100);
       return () => clearInterval(intervalId);
     }

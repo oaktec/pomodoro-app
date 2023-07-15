@@ -108,7 +108,11 @@ export const App: React.FC = () => {
 
       if (mode === "focus") {
         setPomoCount((pomoCount) => pomoCount + 1);
-        setMode("short break");
+        if (pomoCount === 3) {
+          setMode("long break");
+        } else {
+          setMode("short break");
+        }
       } else {
         setMode("focus");
       }
@@ -124,6 +128,7 @@ export const App: React.FC = () => {
     toggleTimer,
     setPomoCount,
     showNotification,
+    pomoCount,
   ]);
 
   // Toggle timer and daily focus timer when play/pause button is clicked
@@ -132,11 +137,12 @@ export const App: React.FC = () => {
     if (modeRef.current === "focus") {
       dailyFocusTimer.toggleTimer();
     } else {
+      if (modeRef.current === "long break") setPomoCount(0);
       if (dailyFocusTimer.isRunning) {
         dailyFocusTimer.toggleTimer();
       }
     }
-  }, [toggleTimer, dailyFocusTimer]);
+  }, [toggleTimer, dailyFocusTimer, setPomoCount]);
 
   return (
     <div className="mobile-safari-height-fix container flex h-screen flex-col">
@@ -162,7 +168,7 @@ export const App: React.FC = () => {
             mode={mode}
             modes={modes}
             timeRemaining={timeRemaining}
-            dailyFocusTime={dailyFocusTimer.elapsedTime}
+            dailyFocusTime={dailyFocusTime}
             isRunning={isRunning}
             onPlayPause={onPlayPause}
           />
