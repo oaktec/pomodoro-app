@@ -5,13 +5,14 @@ interface TimerState {
   elapsedTime: number;
   toggleTimer: () => void;
   resetTimer: () => void;
+  setElapsedSeconds: (elapsedSeconds: number) => void;
 }
 
-const useTimer = (): TimerState => {
+const useTimer = (startingElapsedSeconds = 0): TimerState => {
   const [isRunning, setIsRunning] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
   const startTime = useRef<number | null>(null);
-  const accumulatedTime = useRef(0);
+  const accumulatedTime = useRef(startingElapsedSeconds * 1000);
 
   const toggleTimer = () => {
     setIsRunning((prev) => {
@@ -34,6 +35,10 @@ const useTimer = (): TimerState => {
     startTime.current = null;
   };
 
+  const setElapsedSeconds = (elapsedSeconds: number) => {
+    accumulatedTime.current = elapsedSeconds * 1000;
+  };
+
   useEffect(() => {
     if (isRunning && startTime.current !== null) {
       const intervalId = setInterval(() => {
@@ -50,6 +55,7 @@ const useTimer = (): TimerState => {
     elapsedTime: elapsedTime / 1000,
     toggleTimer,
     resetTimer,
+    setElapsedSeconds,
   };
 };
 
