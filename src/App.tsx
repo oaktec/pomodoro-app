@@ -4,6 +4,7 @@ import Logo from "./assets/Logo.svg";
 import MainTimer from "./components/MainTimer";
 import Settings from "./components/Settings";
 import alarmSound from "./assets/alarm.wav";
+import clickSound from "./assets/click.wav";
 import { formatTimeMinsSeconds } from "./lib/utils";
 import PomoCount from "./components/PomoCount";
 
@@ -55,7 +56,8 @@ export const App: React.FC = () => {
     Math.floor(modes[mode].duration - elapsedTime)
   );
 
-  const sound = useRef(new Audio(alarmSound));
+  const alarm = useRef(new Audio(alarmSound));
+  const click = useRef(new Audio(clickSound));
   const modeRef = useRef(mode);
 
   // Function to show notifications
@@ -103,7 +105,7 @@ export const App: React.FC = () => {
   useEffect(() => {
     if (elapsedTime >= modes[mode].duration) {
       toggleTimer();
-      void sound.current.play();
+      void alarm.current.play();
       showNotification();
 
       if (mode === "focus") {
@@ -134,6 +136,7 @@ export const App: React.FC = () => {
   // Toggle timer and daily focus timer when play/pause button is clicked
   const onPlayPause = useCallback(() => {
     toggleTimer();
+    void click.current.play();
     if (modeRef.current === "focus") {
       dailyFocusTimer.toggleTimer();
     } else {
