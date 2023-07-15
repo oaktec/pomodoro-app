@@ -117,7 +117,7 @@ export const App: React.FC = () => {
     )} - ${mode} | pomodoro timer`;
   }, [timeRemaining, elapsedTime, modes, mode, toggleTimer, setPomoCount]);
 
-  const onPlayPause = () => {
+  const onPlayPause = useCallback(() => {
     toggleTimer();
     if (modeRef.current === "focus") {
       dailyFocusTimer.toggleTimer();
@@ -126,7 +126,7 @@ export const App: React.FC = () => {
         dailyFocusTimer.toggleTimer();
       }
     }
-  };
+  }, [toggleTimer, dailyFocusTimer]);
 
   return (
     <div className="mobile-safari-height-fix container flex h-screen flex-col">
