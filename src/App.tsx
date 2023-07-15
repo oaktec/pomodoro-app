@@ -14,7 +14,6 @@ export type Mode = "focus" | "short break" | "long break";
 
 export type Modes = {
   [key in Mode]: {
-    label: string;
     duration: number;
     colorName: string;
   };
@@ -22,17 +21,14 @@ export type Modes = {
 
 const defaultModes: Modes = {
   focus: {
-    label: "focus",
     duration: 1500,
     colorName: "red",
   },
   "short break": {
-    label: "short break",
     duration: 300,
     colorName: "teal",
   },
   "long break": {
-    label: "long break",
     duration: 900,
     colorName: "purple",
   },
@@ -62,6 +58,7 @@ export const App: React.FC = () => {
   const sound = useRef(new Audio(alarmSound));
   const modeRef = useRef(mode);
 
+  // Function to show notifications
   const showNotification = useCallback(() => {
     if (Notification.permission === "granted") {
       void new Notification("Time's up!", {
@@ -70,6 +67,7 @@ export const App: React.FC = () => {
     }
   }, []);
 
+  // Request permission for notifications and check if it's a new day
   useEffect(() => {
     if ("Notification" in window) {
       void Notification.requestPermission();
@@ -81,9 +79,9 @@ export const App: React.FC = () => {
       dailyFocusTimer.resetTimer();
       setPomoCount(0);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [setToday, dailyFocusTimer, today, setDailyFocusTime, setPomoCount]);
 
+  // Update daily focus time
   useEffect(() => {
     if (dailyFocusTimer.isRunning) {
       setDailyFocusTime(dailyFocusTimer.elapsedTime);
@@ -94,11 +92,14 @@ export const App: React.FC = () => {
     setDailyFocusTime,
   ]);
 
+  // Update modeRef and reset timer when mode changes
   useEffect(() => {
     modeRef.current = mode;
     resetTimer();
-  }, [mode]);
+  }, [mode, resetTimer]);
 
+  // Play alarm sound and show notification when timer is done
+  // Keep document title updated with time remaining
   useEffect(() => {
     if (elapsedTime >= modes[mode].duration) {
       toggleTimer();
@@ -115,8 +116,17 @@ export const App: React.FC = () => {
     document.title = `${formatTimeMinsSeconds(
       timeRemaining
     )} - ${mode} | pomodoro timer`;
-  }, [timeRemaining, elapsedTime, modes, mode, toggleTimer, setPomoCount]);
+  }, [
+    timeRemaining,
+    elapsedTime,
+    modes,
+    mode,
+    toggleTimer,
+    setPomoCount,
+    showNotification,
+  ]);
 
+  // Toggle timer and daily focus timer when play/pause button is clicked
   const onPlayPause = useCallback(() => {
     toggleTimer();
     if (modeRef.current === "focus") {
@@ -141,7 +151,7 @@ export const App: React.FC = () => {
         <TimerModeSelect
           selected={mode}
           modes={modes}
-          onSelect={(mode: "focus" | "short break" | "long break") => {
+          onSelect={(mode: Mode) => {
             setMode(mode);
           }}
         />

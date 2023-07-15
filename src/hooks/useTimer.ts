@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 
 interface TimerState {
   isRunning: boolean;
@@ -28,12 +28,12 @@ const useTimer = (startingElapsedSeconds = 0): TimerState => {
     });
   };
 
-  const resetTimer = () => {
+  const resetTimer = useCallback(() => {
     setIsRunning(false);
     setElapsedTime(0);
     accumulatedTime.current = 0;
     startTime.current = null;
-  };
+  }, []);
 
   const setElapsedSeconds = (elapsedSeconds: number) => {
     accumulatedTime.current = elapsedSeconds * 1000;
