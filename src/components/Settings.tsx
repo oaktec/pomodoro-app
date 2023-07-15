@@ -17,6 +17,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from "./ui/form";
 import { Input } from "./ui/input";
 import { TypographyH3 } from "./ui/typography";
 
+import type { Modes } from "@/App";
+
 const formSchema = z.object({
   focus: z.coerce.number().min(1).max(99),
   "short break": z.coerce.number().min(1).max(99),
@@ -24,42 +26,8 @@ const formSchema = z.object({
 });
 
 export interface SettingsProps {
-  modes: {
-    focus: {
-      label: string;
-      duration: number;
-      colorName: string;
-    };
-    "short break": {
-      label: string;
-      duration: number;
-      colorName: string;
-    };
-    "long break": {
-      label: string;
-      duration: number;
-      colorName: string;
-    };
-  };
-  setModes: (
-    value: React.SetStateAction<{
-      focus: {
-        label: string;
-        duration: number;
-        colorName: string;
-      };
-      "short break": {
-        label: string;
-        duration: number;
-        colorName: string;
-      };
-      "long break": {
-        label: string;
-        duration: number;
-        colorName: string;
-      };
-    }>
-  ) => void;
+  modes: Modes;
+  setModes: (value: React.SetStateAction<Modes>) => void;
 }
 
 const Settings: React.FC<SettingsProps> = ({ modes, setModes }) => {

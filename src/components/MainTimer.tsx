@@ -2,19 +2,15 @@ import * as React from "react";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 
+import type { Mode, Modes } from "@/App";
+
 import { cn } from "@/lib/utils";
 import { formatTimeMinsSeconds, formatTimeHoursMins } from "@/lib/utils";
 
 export interface MainTimerProps {
   className?: string;
-  mode: "focus" | "short break" | "long break";
-  modes: {
-    [key: string]: {
-      label: string;
-      duration: number;
-      colorName: string;
-    };
-  };
+  mode: Mode;
+  modes: Modes;
   timeRemaining: number;
   dailyFocusTime: number;
   isRunning: boolean;

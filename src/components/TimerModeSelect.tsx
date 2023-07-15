@@ -2,17 +2,13 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
+import type { Mode, Modes } from "@/App";
+
 export interface TimerModeSelectProps {
   className?: string;
-  selected: "focus" | "short break" | "long break";
-  modes: {
-    [key: string]: {
-      label: string;
-      duration: number;
-      colorName: string;
-    };
-  };
-  onSelect: (mode: "focus" | "short break" | "long break") => void;
+  selected: Mode;
+  modes: Modes;
+  onSelect: (mode: Mode) => void;
 }
 
 const TimerModeSelect: React.FC<TimerModeSelectProps> = ({
