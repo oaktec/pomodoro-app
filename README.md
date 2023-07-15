@@ -10,13 +10,12 @@ You can access the live app [here](oaktec.github.io/pomodoro-app).
 
 ## Features
 
-- **Three Modes**: Focus, short break, and long break modes with customisable durations.
-- **Automatic Mode Switching**: The timer automatically switches between focus and break modes, enabling a seamless work-flow.
 - **Focus Time Tracking**: Tracks total daily focus time, including the time after a focus session ends and before the break timer is started.
-- **Notifications**: Sound and browser notifications when the timer ends to alert you.
+- **Notifications**: Sound and browser notifications when the timer ends.
+- **Automatic Mode Switching**: The timer automatically switches between focus and break modes, enabling a seamless work-flow.
 - **Window Title Updates**: The window title dynamically updates with the time remaining and the current mode.
 - **Responsive Design**: Looks great on both desktop and mobile.
-- **Persistence**: Uses local storage to save settings and focus time, so you won't lose your progress.
+- **Persistence**: Uses local storage to save settings and focus time.
 
 ## Design
 
