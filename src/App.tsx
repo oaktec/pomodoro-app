@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import TimerModeSelect from "./components/TimerModeSelect";
 import Logo from "./assets/Logo.svg";
 import MainTimer from "./components/MainTimer";
@@ -62,6 +62,14 @@ export const App: React.FC = () => {
   const sound = useRef(new Audio(alarmSound));
   const modeRef = useRef(mode);
 
+  const showNotification = useCallback(() => {
+    if (Notification.permission === "granted") {
+      void new Notification("Time's up!", {
+        body: `Your ${modeRef.current} is over.`,
+      });
+    }
+  }, []);
+
   useEffect(() => {
     if ("Notification" in window) {
       void Notification.requestPermission();
@@ -108,14 +116,6 @@ export const App: React.FC = () => {
       timeRemaining
     )} - ${mode} | pomodoro timer`;
   }, [timeRemaining, elapsedTime, modes, mode, toggleTimer, setPomoCount]);
-
-  const showNotification = () => {
-    if ("Notification" in window && Notification.permission === "granted") {
-      void new Notification("Time's up!", {
-        body: `Your ${modeRef.current} is over.`,
-      });
-    }
-  };
 
   const onPlayPause = () => {
     toggleTimer();
