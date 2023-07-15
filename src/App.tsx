@@ -42,16 +42,17 @@ export const App: React.FC = () => {
   const [mode, setMode] = useState<Mode>("focus");
   const [modes, setModes] = useLocalStorage<Modes>("modes", defaultModes);
   const [pomoCount, setPomoCount] = useLocalStorage<number>("pomoCount", 0);
-  const [dailyFocusTime, setDailyFocusTime] = useLocalStorage<number>(
-    "dailyFocusTime",
-    0
-  );
   const [today, setToday] = useLocalStorage<string>(
     "today",
     new Date().toLocaleDateString()
   );
+  const [dailyFocusTime, setDailyFocusTime] = useLocalStorage<number>(
+    "dailyFocusTime",
+    0
+  );
 
   const { isRunning, elapsedTime, toggleTimer, resetTimer } = useTimer();
+  const dailyFocusTimer = useTimer(dailyFocusTime);
 
   const timeRemaining = Math.max(
     0,
@@ -69,10 +70,21 @@ export const App: React.FC = () => {
     if (today !== new Date().toLocaleDateString()) {
       setToday(new Date().toLocaleDateString());
       setDailyFocusTime(0);
+      dailyFocusTimer.resetTimer();
       setPomoCount(0);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (dailyFocusTimer.isRunning) {
+      setDailyFocusTime(dailyFocusTimer.elapsedTime);
+    }
+  }, [
+    dailyFocusTimer.elapsedTime,
+    dailyFocusTimer.isRunning,
+    setDailyFocusTime,
+  ]);
 
   useEffect(() => {
     modeRef.current = mode;
@@ -107,6 +119,13 @@ export const App: React.FC = () => {
 
   const onPlayPause = () => {
     toggleTimer();
+    if (modeRef.current === "focus") {
+      dailyFocusTimer.toggleTimer();
+    } else {
+      if (dailyFocusTimer.isRunning) {
+        dailyFocusTimer.toggleTimer();
+      }
+    }
   };
 
   return (
@@ -124,7 +143,6 @@ export const App: React.FC = () => {
           modes={modes}
           onSelect={(mode: "focus" | "short break" | "long break") => {
             setMode(mode);
-            // setIsFocussed(false);
           }}
         />
         <PomoCount count={pomoCount} />
@@ -134,44 +152,11 @@ export const App: React.FC = () => {
             mode={mode}
             modes={modes}
             timeRemaining={timeRemaining}
-            dailyFocusTime={dailyFocusTime}
+            dailyFocusTime={dailyFocusTimer.elapsedTime}
             isRunning={isRunning}
             onPlayPause={onPlayPause}
           />
-          <Settings
-            modes={
-              modes as {
-                focus: { label: string; duration: number; colorName: string };
-                "short break": {
-                  label: string;
-                  duration: number;
-                  colorName: string;
-                };
-                "long break": {
-                  label: string;
-                  duration: number;
-                  colorName: string;
-                };
-              }
-            }
-            setModes={
-              setModes as React.Dispatch<
-                React.SetStateAction<{
-                  focus: { label: string; duration: number; colorName: string };
-                  "short break": {
-                    label: string;
-                    duration: number;
-                    colorName: string;
-                  };
-                  "long break": {
-                    label: string;
-                    duration: number;
-                    colorName: string;
-                  };
-                }>
-              >
-            }
-          />
+          <Settings modes={modes} setModes={setModes} />
         </div>
       </main>
     </div>
