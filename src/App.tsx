@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import TimerModeSelect from "./components/TimerModeSelect";
 import Logo from "./assets/Logo.svg";
 import MainTimer from "./components/MainTimer";
