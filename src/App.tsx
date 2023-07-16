@@ -103,7 +103,7 @@ export const App: React.FC = () => {
   // Play alarm sound and show notification when timer is done
   // Keep document title updated with time remaining
   useEffect(() => {
-    if (elapsedTime >= modes[mode].duration) {
+    if (timeRemaining === 0) {
       toggleTimer();
       void alarm.current.play();
       showNotification();
@@ -124,13 +124,11 @@ export const App: React.FC = () => {
     )} - ${mode} | pomodoro timer`;
   }, [
     timeRemaining,
-    elapsedTime,
-    modes,
     mode,
+    pomoCount,
     toggleTimer,
     setPomoCount,
     showNotification,
-    pomoCount,
   ]);
 
   // Toggle timer and daily focus timer when play/pause button is clicked
