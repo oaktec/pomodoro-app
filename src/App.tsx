@@ -5,7 +5,7 @@ import MainTimer from "./components/MainTimer";
 import Settings from "./components/Settings";
 import alarmSound from "./assets/alarm.wav";
 import clickSound from "./assets/click.wav";
-import { formatTimeMinsSeconds } from "./lib/utils";
+import { formatTimeMinsSeconds, showNotification } from "./lib/utils";
 import PomoCount from "./components/PomoCount";
 
 import useLocalStorage from "./hooks/useLocalStorage";
@@ -48,70 +48,18 @@ export const App: React.FC = () => {
     0
   );
 
-  const { isRunning, elapsedTime, toggleTimer, resetTimer } = useTimer();
-  const dailyFocusTimer = useTimer(dailyFocusTime);
-
-  const timeRemaining = Math.max(
-    0,
-    Math.floor(modes[mode].duration - elapsedTime)
-  );
-
-  const alarm = useRef(new Audio(alarmSound));
   const click = useRef(new Audio(clickSound));
-  const modeRef = useRef(mode);
+  const alarm = useRef(new Audio(alarmSound));
 
-  // Function to show notifications
-  const showNotification = useCallback(() => {
-    if (Notification.permission === "granted") {
-      void new Notification("Time's up!", {
-        body: `Your ${modeRef.current} is over.`,
-        requireInteraction: true,
-      });
-    }
-  }, []);
-
-  // Request permission for notifications and check if it's a new day
-  useEffect(() => {
-    if ("Notification" in window) {
-      void Notification.requestPermission();
-    }
-
-    if (today !== new Date().toLocaleDateString()) {
-      setToday(new Date().toLocaleDateString());
-      setDailyFocusTime(0);
-      dailyFocusTimer.resetTimer();
-      setPomoCount(0);
-    }
-  }, [setToday, dailyFocusTimer, today, setDailyFocusTime, setPomoCount]);
-
-  // Update daily focus time
-  useEffect(() => {
-    if (dailyFocusTimer.isRunning) {
-      setDailyFocusTime(dailyFocusTimer.elapsedTime);
-    }
-  }, [
-    dailyFocusTimer.elapsedTime,
-    dailyFocusTimer.isRunning,
-    setDailyFocusTime,
-  ]);
-
-  // Update modeRef and reset timer when mode changes
-  useEffect(() => {
-    modeRef.current = mode;
-    resetTimer();
-  }, [mode, resetTimer]);
-
-  // Play alarm sound and show notification when timer is done
-  // Keep document title updated with time remaining
-  useEffect(() => {
-    if (timeRemaining === 0) {
-      toggleTimer();
+  const { isRunning, elapsedTime, toggleTimer, resetTimer } = useTimer({
+    duration: modes[mode].duration,
+    onTimerEnd: () => {
       void alarm.current.play();
-      showNotification();
+      showNotification("Time's up!", `Your ${mode} is over.`);
 
       if (mode === "focus") {
         setPomoCount((pomoCount) => pomoCount + 1);
-        if (pomoCount === 3) {
+        if (pomoCount >= 3) {
           setMode("long break");
         } else {
           setMode("short break");
@@ -119,32 +67,70 @@ export const App: React.FC = () => {
       } else {
         setMode("focus");
       }
+    },
+  });
+
+  const dailyFocusTimer = useTimer({
+    startingElapsedSeconds: dailyFocusTime,
+    onTimerEnd: () => {
+      return;
+    },
+  });
+
+  const timeRemaining = Math.max(
+    0,
+    Math.floor(modes[mode].duration - elapsedTime)
+  );
+
+  // Request permission for notifications and check if it's a new day
+  useEffect(() => {
+    if ("Notification" in window) {
+      void Notification.requestPermission();
     }
-    document.title = `${formatTimeMinsSeconds(
-      timeRemaining
-    )} - ${mode} | pomodoro timer`;
-  }, [
-    timeRemaining,
-    mode,
-    pomoCount,
-    toggleTimer,
-    setPomoCount,
-    showNotification,
-  ]);
+  }, []);
+
+  if (today !== new Date().toLocaleDateString()) {
+    setToday(new Date().toLocaleDateString());
+    setDailyFocusTime(0);
+    dailyFocusTimer.resetTimer();
+    setPomoCount(0);
+  }
+
+  // if (timeRemaining === 0) {
+  //   resetTimer();
+  //   void alarm.current.play();
+  //   console.log("Time's up!");
+  //   showNotification("Time's up!", `Your ${mode} is over.`);
+
+  //   if (mode === "focus") {
+  //     setPomoCount((pomoCount) => pomoCount + 1);
+  //     if (pomoCount === 3) {
+  //       setMode("long break");
+  //     } else {
+  //       setMode("short break");
+  //     }
+  //   } else {
+  //     setMode("focus");
+  //   }
+  // }
+
+  document.title = `${formatTimeMinsSeconds(
+    timeRemaining
+  )} - ${mode} | pomodoro timer`;
 
   // Toggle timer and daily focus timer when play/pause button is clicked
-  const onPlayPause = useCallback(() => {
+  const onPlayPause = () => {
     toggleTimer();
     void click.current.play();
-    if (modeRef.current === "focus") {
+    if (mode === "focus") {
       dailyFocusTimer.toggleTimer();
     } else {
-      if (modeRef.current === "long break") setPomoCount(0);
+      if (mode === "long break") setPomoCount(0);
       if (dailyFocusTimer.isRunning) {
         dailyFocusTimer.toggleTimer();
       }
     }
-  }, [toggleTimer, dailyFocusTimer, setPomoCount]);
+  };
 
   return (
     <div className="mobile-safari-height-fix container flex h-screen flex-col">
@@ -160,6 +146,7 @@ export const App: React.FC = () => {
           selected={mode}
           modes={modes}
           onSelect={(mode: Mode) => {
+            resetTimer();
             setMode(mode);
           }}
         />

@@ -8,7 +8,17 @@ interface TimerState {
   setElapsedSeconds: (elapsedSeconds: number) => void;
 }
 
-const useTimer = (startingElapsedSeconds = 0): TimerState => {
+interface useTimerProps {
+  startingElapsedSeconds?: number;
+  duration?: number;
+  onTimerEnd?: () => void;
+}
+
+const useTimer = ({
+  startingElapsedSeconds = 0,
+  duration = 0,
+  onTimerEnd,
+}: useTimerProps): TimerState => {
   const [isRunning, setIsRunning] = useState(false);
   const accumulatedTime = useRef(startingElapsedSeconds * 1000);
   const [elapsedTime, setElapsedTime] = useState(accumulatedTime.current);
@@ -28,29 +38,38 @@ const useTimer = (startingElapsedSeconds = 0): TimerState => {
     });
   };
 
-  const resetTimer = useCallback(() => {
+  const resetTimer = () => {
     setIsRunning(false);
     setElapsedTime(0);
     accumulatedTime.current = 0;
     startTime.current = null;
-  }, []);
+  };
 
-  const setElapsedSeconds = useCallback((elapsedSeconds: number) => {
+  const setElapsedSeconds = (elapsedSeconds: number) => {
     accumulatedTime.current = elapsedSeconds * 1000;
     setElapsedTime(accumulatedTime.current);
-  }, []);
+  };
 
   useEffect(() => {
     if (isRunning && startTime.current !== null) {
       const intervalId = setInterval(() => {
-        if (startTime.current !== null)
-          setElapsedTime(
-            accumulatedTime.current + Date.now() - startTime.current
-          );
+        if (startTime.current !== null) {
+          const currentElapsedTime =
+            accumulatedTime.current + Date.now() - startTime.current;
+          setElapsedTime(currentElapsedTime);
+
+          if (currentElapsedTime / 1000 >= duration) {
+            clearInterval(intervalId);
+            resetTimer();
+            if (onTimerEnd) {
+              onTimerEnd();
+            }
+          }
+        }
       }, 100);
       return () => clearInterval(intervalId);
     }
-  }, [isRunning]);
+  }, [isRunning, duration, onTimerEnd]);
 
   return {
     isRunning,
