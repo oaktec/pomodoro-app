@@ -65,6 +65,7 @@ export const App: React.FC = () => {
     if (Notification.permission === "granted") {
       void new Notification("Time's up!", {
         body: `Your ${modeRef.current} is over.`,
+        requireInteraction: true,
       });
     }
   }, []);
