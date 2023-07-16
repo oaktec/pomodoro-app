@@ -51,7 +51,7 @@ export const App: React.FC = () => {
   const click = useRef(new Audio(clickSound));
   const alarm = useRef(new Audio(alarmSound));
 
-  const { isRunning, elapsedTime, toggleTimer, resetTimer } = useTimer({
+  const mainTimer = useTimer({
     duration: modes[mode].duration,
     onTimerEnd: () => {
       void alarm.current.play();
@@ -74,17 +74,17 @@ export const App: React.FC = () => {
     startingElapsedSeconds: dailyFocusTime,
   });
 
-  const timeRemaining = Math.max(
-    0,
-    Math.floor(modes[mode].duration - elapsedTime)
-  );
-
   // Request permission for notifications and check if it's a new day
   useEffect(() => {
     if ("Notification" in window) {
       void Notification.requestPermission();
     }
   }, []);
+
+  const timeRemaining = Math.max(
+    0,
+    Math.floor(modes[mode].duration - mainTimer.elapsedTime)
+  );
 
   if (today !== new Date().toLocaleDateString()) {
     setToday(new Date().toLocaleDateString());
@@ -93,31 +93,13 @@ export const App: React.FC = () => {
     setPomoCount(0);
   }
 
-  // if (timeRemaining === 0) {
-  //   resetTimer();
-  //   void alarm.current.play();
-  //   console.log("Time's up!");
-  //   showNotification("Time's up!", `Your ${mode} is over.`);
-
-  //   if (mode === "focus") {
-  //     setPomoCount((pomoCount) => pomoCount + 1);
-  //     if (pomoCount === 3) {
-  //       setMode("long break");
-  //     } else {
-  //       setMode("short break");
-  //     }
-  //   } else {
-  //     setMode("focus");
-  //   }
-  // }
-
   document.title = `${formatTimeMinsSeconds(
     timeRemaining
   )} - ${mode} | pomodoro timer`;
 
   // Toggle timer and daily focus timer when play/pause button is clicked
   const onPlayPause = () => {
-    toggleTimer();
+    mainTimer.toggleTimer();
     void click.current.play();
     if (mode === "focus") {
       dailyFocusTimer.toggleTimer();
@@ -143,7 +125,7 @@ export const App: React.FC = () => {
           selected={mode}
           modes={modes}
           onSelect={(mode: Mode) => {
-            resetTimer();
+            mainTimer.resetTimer();
             setMode(mode);
           }}
         />
@@ -155,7 +137,7 @@ export const App: React.FC = () => {
             modes={modes}
             timeRemaining={timeRemaining}
             dailyFocusTime={dailyFocusTime}
-            isRunning={isRunning}
+            isRunning={mainTimer.isRunning}
             onPlayPause={onPlayPause}
           />
           <Settings modes={modes} setModes={setModes} />
