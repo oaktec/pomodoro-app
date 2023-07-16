@@ -72,9 +72,6 @@ export const App: React.FC = () => {
 
   const dailyFocusTimer = useTimer({
     startingElapsedSeconds: dailyFocusTime,
-    onTimerEnd: () => {
-      return;
-    },
   });
 
   const timeRemaining = Math.max(

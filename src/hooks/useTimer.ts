@@ -17,7 +17,7 @@ interface useTimerProps {
 const useTimer = ({
   startingElapsedSeconds = 0,
   duration = 0,
-  onTimerEnd,
+  onTimerEnd = undefined,
 }: useTimerProps): TimerState => {
   const [isRunning, setIsRunning] = useState(false);
   const accumulatedTime = useRef(startingElapsedSeconds * 1000);
