@@ -20,3 +20,12 @@ export const formatTimeHoursMins = (totalSeconds: number) => {
 
   return `${hours}:${minutes < 10 ? "0" + minutes.toString() : minutes}`;
 };
+
+export const showNotification = (title: string, body: string) => {
+  if (Notification.permission === "granted") {
+    void new Notification(title, {
+      body,
+      requireInteraction: true,
+    });
+  }
+};
