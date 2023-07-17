@@ -10,6 +10,7 @@ import PomoCount from "./components/PomoCount";
 
 import useLocalStorage from "./hooks/useLocalStorage";
 import useTimer from "./hooks/useTimer";
+import useCheckNewDay from "./hooks/useCheckNewDay";
 
 export type Mode = "focus" | "short break" | "long break";
 
@@ -39,10 +40,6 @@ export const App: React.FC = () => {
   const [mode, setMode] = useState<Mode>("focus");
   const [modes, setModes] = useLocalStorage<Modes>("modes", defaultModes);
   const [pomoCount, setPomoCount] = useLocalStorage<number>("pomoCount", 0);
-  const [today, setToday] = useLocalStorage<string>(
-    "today",
-    new Date().toLocaleDateString()
-  );
   const [dailyFocusTime, setDailyFocusTime] = useLocalStorage<number>(
     "dailyFocusTime",
     0
@@ -77,10 +74,12 @@ export const App: React.FC = () => {
     },
   });
 
-  const timeRemaining = Math.max(
-    0,
-    Math.floor(modes[mode].duration - mainTimer.elapsedTime)
-  );
+  // Reset daily focus timer and pomo count when it's a new day
+  useCheckNewDay(() => {
+    setDailyFocusTime(0);
+    dailyFocusTimer.resetTimer();
+    setPomoCount(0);
+  });
 
   // Request permission for notifications and check if it's a new day
   useEffect(() => {
@@ -89,13 +88,12 @@ export const App: React.FC = () => {
     }
   }, []);
 
-  if (today !== new Date().toLocaleDateString()) {
-    setToday(new Date().toLocaleDateString());
-    setDailyFocusTime(0);
-    dailyFocusTimer.resetTimer();
-    setPomoCount(0);
-  }
+  const timeRemaining = Math.max(
+    0,
+    Math.floor(modes[mode].duration - mainTimer.elapsedTime)
+  );
 
+  // Update document title with time remaining and current mode
   useEffect(() => {
     document.title = `${formatTimeMinsSeconds(
       timeRemaining
