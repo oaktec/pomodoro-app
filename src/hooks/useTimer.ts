@@ -12,12 +12,14 @@ interface useTimerProps {
   startingElapsedSeconds?: number;
   duration?: number;
   onTimerEnd?: () => void;
+  onTimerInterval?: () => void;
 }
 
 const useTimer = ({
   startingElapsedSeconds = 0,
   duration = 0,
   onTimerEnd = undefined,
+  onTimerInterval = undefined,
 }: useTimerProps): TimerState => {
   const [isRunning, setIsRunning] = useState(false);
   const accumulatedTime = useRef(startingElapsedSeconds * 1000);
@@ -58,7 +60,7 @@ const useTimer = ({
             accumulatedTime.current + Date.now() - startTime.current;
           setElapsedTime(currentElapsedTime);
 
-          if (currentElapsedTime / 1000 >= duration) {
+          if (duration && currentElapsedTime / 1000 >= duration) {
             clearInterval(intervalId);
             resetTimer();
             if (onTimerEnd) {
@@ -66,10 +68,13 @@ const useTimer = ({
             }
           }
         }
-      }, 100);
+        if (onTimerInterval) {
+          onTimerInterval();
+        }
+      }, 250);
       return () => clearInterval(intervalId);
     }
-  }, [isRunning, duration, onTimerEnd]);
+  }, [isRunning, duration, onTimerEnd, onTimerInterval]);
 
   return {
     isRunning,

@@ -72,6 +72,9 @@ export const App: React.FC = () => {
 
   const dailyFocusTimer = useTimer({
     startingElapsedSeconds: dailyFocusTime,
+    onTimerInterval: () => {
+      setDailyFocusTime(dailyFocusTimer.elapsedTime);
+    },
   });
 
   // Request permission for notifications and check if it's a new day
