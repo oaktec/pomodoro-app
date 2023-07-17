@@ -77,17 +77,17 @@ export const App: React.FC = () => {
     },
   });
 
+  const timeRemaining = Math.max(
+    0,
+    Math.floor(modes[mode].duration - mainTimer.elapsedTime)
+  );
+
   // Request permission for notifications and check if it's a new day
   useEffect(() => {
     if ("Notification" in window) {
       void Notification.requestPermission();
     }
   }, []);
-
-  const timeRemaining = Math.max(
-    0,
-    Math.floor(modes[mode].duration - mainTimer.elapsedTime)
-  );
 
   if (today !== new Date().toLocaleDateString()) {
     setToday(new Date().toLocaleDateString());
@@ -96,9 +96,11 @@ export const App: React.FC = () => {
     setPomoCount(0);
   }
 
-  document.title = `${formatTimeMinsSeconds(
-    timeRemaining
-  )} - ${mode} | pomodoro timer`;
+  useEffect(() => {
+    document.title = `${formatTimeMinsSeconds(
+      timeRemaining
+    )} - ${mode} | pomodoro timer`;
+  }, [timeRemaining, mode]);
 
   // Toggle timer and daily focus timer when play/pause button is clicked
   const onPlayPause = () => {
@@ -115,7 +117,7 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="mobile-safari-height-fix container flex h-screen flex-col">
+    <div className="container flex h-screen flex-col">
       <header className="flex justify-center">
         <img
           className="mt-8 h-6 sm:mt-20 sm:h-8 lg:mt-8"
