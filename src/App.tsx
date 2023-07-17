@@ -45,13 +45,16 @@ export const App: React.FC = () => {
     0
   );
 
-  const click = useRef(new Audio(clickSound));
-  const alarm = useRef(new Audio(alarmSound));
+  const clickRef = useRef<HTMLAudioElement | null>(null);
+  if (clickRef.current === null) clickRef.current = new Audio(clickSound);
+
+  const alarmRef = useRef<HTMLAudioElement | null>(null);
+  if (alarmRef.current === null) alarmRef.current = new Audio(alarmSound);
 
   const mainTimer = useTimer({
     duration: modes[mode].duration,
     onTimerEnd: () => {
-      void alarm.current.play();
+      if (alarmRef.current) void alarmRef.current.play();
       showNotification("Time's up!", `Your ${mode} is over.`);
 
       if (mode === "focus") {
@@ -103,7 +106,7 @@ export const App: React.FC = () => {
   // Toggle timer and daily focus timer when play/pause button is clicked
   const onPlayPause = () => {
     mainTimer.toggleTimer();
-    void click.current.play();
+    if (clickRef.current) void clickRef.current.play();
     if (mode === "focus") {
       dailyFocusTimer.toggleTimer();
     } else {
