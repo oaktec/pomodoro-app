@@ -13,6 +13,7 @@ export interface MainTimerProps {
   modes: Modes;
   timeRemaining: number;
   dailyFocusTime: number;
+  isFocusActive: boolean;
   isRunning: boolean;
   onPlayPause: () => void;
 }
@@ -22,6 +23,7 @@ const MainTimer: React.FC<MainTimerProps> = ({
   mode,
   timeRemaining,
   dailyFocusTime,
+  isFocusActive,
   isRunning,
   modes,
   onPlayPause,
@@ -46,7 +48,12 @@ const MainTimer: React.FC<MainTimerProps> = ({
           })}
         />
 
-        <div className="absolute top-[20%] z-10 font-bold text-primary opacity-40 sm:text-xl">
+        <div
+          className={cn(
+            "absolute top-[20%] z-10 font-bold text-primary opacity-40 sm:text-xl",
+            isFocusActive ? "text-red" : ""
+          )}
+        >
           Daily Focus: {formatTimeHoursMins(dailyFocusTime)}
         </div>
 

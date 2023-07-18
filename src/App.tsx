@@ -148,6 +148,7 @@ export const App: React.FC = () => {
             timeRemaining={timeRemaining}
             dailyFocusTime={dailyFocusTime}
             isRunning={mainTimer.isRunning}
+            isFocusActive={dailyFocusTimer.isRunning}
             onPlayPause={onPlayPause}
           />
           <Settings modes={modes} setModes={setModes} />
