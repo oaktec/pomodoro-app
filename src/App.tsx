@@ -130,10 +130,14 @@ export const App: React.FC = () => {
         <TimerModeSelect
           selected={mode}
           modes={modes}
+          isFocusActiveInBackground={
+            dailyFocusTimer.isRunning && mode !== "focus"
+          }
           onSelect={(mode: Mode) => {
             mainTimer.resetTimer();
             setMode(mode);
           }}
+          stopFocus={() => dailyFocusTimer.toggleTimer()}
         />
         <PomoCount count={pomoCount} />
         <div className="flex flex-1 flex-col items-center justify-around">

@@ -8,6 +8,8 @@ export interface TimerModeSelectProps {
   className?: string;
   selected: Mode;
   modes: Modes;
+  isFocusActiveInBackground: boolean;
+  stopFocus: () => void;
   onSelect: (mode: Mode) => void;
 }
 
@@ -15,9 +17,15 @@ const TimerModeSelect: React.FC<TimerModeSelectProps> = ({
   className,
   selected,
   onSelect,
+  isFocusActiveInBackground,
+  stopFocus,
   modes,
 }) => {
   const options = ["focus", "short break", "long break"];
+  const [focusText, setFocusText] = React.useState("focus active");
+
+  const handleFocusHover = () => setFocusText("stop focus");
+  const handleFocusLeave = () => setFocusText("focus active");
 
   return (
     <section
@@ -33,13 +41,19 @@ const TimerModeSelect: React.FC<TimerModeSelectProps> = ({
             "mb-2 mt-2 w-[6.5rem] rounded-3xl text-center text-xs font-bold transition-colors sm:w-[7.5rem] sm:text-sm",
             selected === option
               ? `bg-${modes[option].colorName} text-background"`
+              : option === "focus" && isFocusActiveInBackground
+              ? "bg-midnight text-red"
               : "bg-midnight text-primary opacity-40"
           )}
-          onClick={() =>
-            onSelect(option as "focus" | "short break" | "long break")
+          onClick={
+            option === "focus" && isFocusActiveInBackground
+              ? stopFocus
+              : () => onSelect(option as "focus" | "short break" | "long break")
           }
+          onMouseEnter={option === "focus" ? handleFocusHover : undefined}
+          onMouseLeave={option === "focus" ? handleFocusLeave : undefined}
         >
-          {option}
+          {option === "focus" && isFocusActiveInBackground ? focusText : option}
         </button>
       ))}
     </section>
