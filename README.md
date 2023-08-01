@@ -6,7 +6,7 @@ The main reason for building my own pomodoro timer was that I wanted one that tr
 
 ![App Screenshot](./screenshot.png)
 
-You can access the live app [here](oaktec.github.io/pomodoro-app).
+You can access the live app [here](https://oaktec.github.io/pomodoro-app/).
 
 ## Features
 
