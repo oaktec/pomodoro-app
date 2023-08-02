@@ -84,7 +84,7 @@ export const App: React.FC = () => {
     setPomoCount(0);
   });
 
-  // Request permission for notifications and check if it's a new day
+  // Request permission for notifications
   useEffect(() => {
     if ("Notification" in window) {
       void Notification.requestPermission();
