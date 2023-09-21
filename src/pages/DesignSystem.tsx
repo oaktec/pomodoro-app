@@ -15,7 +15,7 @@ import { InputPair } from "@/components/ui/inputPair";
 
 function DesignSystem() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-[100dvh] bg-background">
       <div className="container mx-auto px-5 py-24">
         <div className="mb-16 flex flex-col">
           <img className="w-36" src={Logo} alt="Logo" />

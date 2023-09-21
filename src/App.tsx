@@ -118,7 +118,7 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="container flex h-screen flex-col">
+    <div className="container flex h-[100dvh] flex-col">
       <header className="flex justify-center">
         <img
           className="mt-8 h-6 sm:mt-20 sm:h-8 lg:mt-8"
